@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { CURRENCY } from '../config';
 import { today } from '../lib/dates';
 import { AREAS, DEFAULT_AREA, MOODS, TYPES, similarPast, type Area, type Entry, type EntryType } from '../lib/ledger';
+import { CHEERS, SAVED_DECISION, SAVED_SPEND, pick } from '../lib/lines';
 import { uid, useStore } from '../lib/store';
 import { confirmAction, haptic } from '../lib/telegram';
+import { Character } from './Character';
 import { EntryItem } from './EntryItem';
 import { Field, Sheet } from './ui';
 
@@ -20,7 +22,7 @@ const PLACEHOLDER: Record<EntryType, string> = {
 
 /** Add a new ledger entry, or edit one (including a decision's outcome). */
 export function EntryForm({ entry, initialType, onClose }: { entry?: Entry; initialType?: EntryType; onClose: () => void }) {
-  const { data, update } = useStore();
+  const { data, update, cheer } = useStore();
   const [draft, setDraft] = useState<Entry>(() => {
     if (entry) return entry;
     const type = initialType ?? 'did';
@@ -63,6 +65,8 @@ export function EntryForm({ entry, initialType, onClose }: { entry?: Entry; init
       entries: entry ? d.entries.map((e) => (e.id === entry.id ? clean : e)) : [...d.entries, clean],
     }));
     haptic('success');
+    if (entry && clean.outcome && !entry.outcome) cheer({ who: 'ada', text: 'Good. That lesson is part of your memory now.' });
+    else if (!entry) cheer(clean.type === 'decision' ? SAVED_DECISION : clean.type === 'money-out' ? SAVED_SPEND : pick(CHEERS, clean.id));
     onClose();
   };
 
@@ -148,8 +152,9 @@ export function EntryForm({ entry, initialType, onClose }: { entry?: Entry; init
 
       {recall.length > 0 && (
         <div className="recall">
-          <div className="eyebrow" style={{ marginBottom: 4 }}>
-            Last time
+          <div className="row" style={{ gap: 8, marginBottom: 2 }}>
+            <Character who="ada" size={36} />
+            <span className="eyebrow">Mama Ada remembers — last time</span>
           </div>
           {recall.map(({ entry: past }) => (
             <EntryItem key={past.id} entry={past} showDate />

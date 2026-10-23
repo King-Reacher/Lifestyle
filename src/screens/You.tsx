@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Say } from '../components/Character';
 import { Field } from '../components/ui';
 import { emptyData, parseData } from '../lib/storage';
 import { useStore } from '../lib/store';
@@ -43,7 +44,7 @@ export function You({ userId }: { userId: number | null }) {
 
   return (
     <>
-      <h1>You</h1>
+      <Say who="ada" text="What you write here stays between you and this phone. Still — keep a backup, my child." size={80} />
 
       <div className="card">
         <h2>🔒 Private</h2>

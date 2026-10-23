@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Character, Say, type Who } from './components/Character';
 import { APP_NAME, OWNER_ID } from './config';
 import { checkAccess } from './lib/access';
+import { today } from './lib/dates';
+import { loggingStreak } from './lib/ledger';
 import { loadData, saveData, type AppData } from './lib/storage';
-import { StoreContext, type Updater } from './lib/store';
+import { StoreContext, type Cheer, type Updater } from './lib/store';
 import { getWebApp, haptic } from './lib/telegram';
 import { Home } from './screens/Home';
 import { Ledger } from './screens/Ledger';
@@ -16,10 +19,21 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'you', label: 'You', icon: '🔒' },
 ];
 
+function Gate({ who, title, children }: { who: Who; title: string; children: ReactNode }) {
+  return (
+    <div className="app gate">
+      <Character who={who} size={130} />
+      {title && <h1>{title}</h1>}
+      {children}
+    </div>
+  );
+}
+
 export function App() {
   const access = useMemo(() => checkAccess(OWNER_ID, getWebApp(), window.location.hostname), []);
   const [data, setData] = useState<AppData | null>(null);
   const [tab, setTab] = useState<Tab>('home');
+  const [toast, setToast] = useState<{ who: Who; text: string; key: number } | null>(null);
 
   useEffect(() => {
     if (access.status === 'ok') loadData().then(setData);
@@ -29,42 +43,49 @@ export function App() {
     if (data) saveData(data);
   }, [data]);
 
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   const update: Updater = useCallback((fn) => setData((d) => (d ? fn(d) : d)), []);
+  const cheer: Cheer = useCallback((line) => setToast({ ...line, key: Date.now() }), []);
 
   if (access.status === 'outside-telegram') {
     return (
-      <div className="app gate">
-        <div className="big">📱</div>
-        <h1>Open this in Telegram</h1>
+      <Gate who="zara" title="Open me in Telegram">
         <p className="muted">{APP_NAME} is a private Telegram mini app. Open it from your bot.</p>
-      </div>
+      </Gate>
     );
   }
   if (access.status === 'denied') {
     return (
-      <div className="app gate">
-        <div className="big">🔒</div>
-        <h1>This app is private</h1>
-        <p className="muted">It only opens for its owner.</p>
-      </div>
+      <Gate who="ada" title="This one is private">
+        <p className="muted">Sorry, my dear. This app only opens for its owner.</p>
+      </Gate>
     );
   }
   if (access.status === 'setup') {
     return (
-      <div className="app gate">
-        <div className="big">🛠️</div>
-        <h1>One setup step</h1>
+      <Gate who="blaze" title="One setup step">
         <p className="muted">Lock the app to your account. Your Telegram ID is:</p>
-        <p style={{ fontSize: 22 }}>
+        <p style={{ fontSize: 24, fontWeight: 900 }}>
           <code>{access.userId}</code>
         </p>
         <p className="small muted">
           Set <code>VITE_OWNER_ID</code> to this number where the app is hosted, then redeploy. Until then, nobody can use it.
         </p>
-      </div>
+      </Gate>
     );
   }
-  if (!data) return <div className="app gate muted">Loading…</div>;
+  if (!data) {
+    return (
+      <Gate who="blaze" title="">
+        <p className="muted">Lighting up…</p>
+      </Gate>
+    );
+  }
 
   const go = (t: Tab) => {
     haptic();
@@ -72,13 +93,28 @@ export function App() {
     window.scrollTo(0, 0);
   };
 
+  const streak = loggingStreak(data.entries, today());
+
   return (
-    <StoreContext.Provider value={{ data, update }}>
+    <StoreContext.Provider value={{ data, update, cheer }}>
       <div className="app">
+        <header className="topbar">
+          <div className="brand">
+            {APP_NAME.toUpperCase()} <span>●</span>
+          </div>
+          <span className="pill fire" title="Logging streak">
+            🔥 {streak}
+          </span>
+        </header>
         {tab === 'home' && <Home name={access.name} />}
         {tab === 'ledger' && <Ledger />}
         {tab === 'you' && <You userId={access.userId} />}
       </div>
+      {toast && (
+        <div className="toast" key={toast.key} onClick={() => setToast(null)}>
+          <Say who={toast.who} text={toast.text} size={60} mood="cheer" />
+        </div>
+      )}
       <div className="tabbar">
         <nav>
           {TABS.map((t) => (

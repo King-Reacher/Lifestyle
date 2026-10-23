@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Say } from '../components/Character';
 import { EntryForm } from '../components/EntryForm';
 import { EntryItem } from '../components/EntryItem';
-import { Empty } from '../components/ui';
 import { formatDay } from '../lib/dates';
 import { AREAS, groupByDay, search, TYPES, type Area, type Entry, type EntryType } from '../lib/ledger';
 import { useStore } from '../lib/store';
@@ -19,10 +19,7 @@ export function Ledger() {
 
   return (
     <>
-      <h1>Ledger</h1>
-      <p className="small muted" style={{ marginTop: 0 }}>
-        Everything you’ve logged. Search it like your own memory.
-      </p>
+      <Say who="zara" text={data.entries.length ? `${data.entries.length} entries on record. Ask me anything — search it like your own memory.` : 'Your ledger is empty. Log something and I’ll keep it safe.'} size={72} />
       <input type="search" placeholder="Search… e.g. transport, decided, maths" value={query} onChange={(e) => setQuery(e.target.value)} />
       <div className="chips" style={{ marginTop: 10 }}>
         <button className={`chip ${!type ? 'selected' : ''}`} onClick={() => setType(null)}>
@@ -43,9 +40,7 @@ export function Ledger() {
       </div>
 
       {groups.length === 0 ? (
-        <div className="card">
-          <Empty>{data.entries.length ? 'Nothing matches that.' : 'Your ledger is empty. Log your first entry from Home.'}</Empty>
-        </div>
+        data.entries.length > 0 && <div className="card empty">Nothing matches that. Try fewer words.</div>
       ) : (
         groups.map((g) => (
           <div key={g.date} className="card">

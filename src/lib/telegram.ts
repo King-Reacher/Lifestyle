@@ -75,4 +75,9 @@ export function initTelegram() {
   wa.expand();
   // Stop a downward swipe inside a sheet from closing the whole app.
   if (wa.isVersionAtLeast('7.7')) wa.disableVerticalSwipes?.();
+  // Blend Telegram's header into the app's own dark theme.
+  if (wa.isVersionAtLeast('6.1')) {
+    wa.setHeaderColor?.('#0a1020');
+    wa.setBackgroundColor?.('#0a1020');
+  }
 }
