@@ -50,7 +50,7 @@ export interface Entry {
   text: string;
   amount?: number;
   minutes?: number;
-  /** 1 (awful) – 5 (great) */
+  /** 1 (awful) to 5 (great) */
   mood?: number;
   /** For decisions: how it turned out, filled in later. */
   outcome?: string;
@@ -140,7 +140,7 @@ export type Prompt =
 
 /**
  * Questions the ledger asks you, from simple rules over what you've logged.
- * `hour` is the current local hour (0–23).
+ * `hour` is the current local hour, 0 to 23.
  */
 export function prompts(entries: Entry[], day: ISODate, hour: number): Prompt[] {
   const out: Prompt[] = [];
@@ -149,7 +149,7 @@ export function prompts(entries: Entry[], day: ISODate, hour: number): Prompt[] 
     .filter((e) => e.type === 'decision' && !e.outcome && diffDays(e.date, day) >= 2)
     .sort((a, b) => a.at.localeCompare(b.at));
   for (const e of openDecisions.slice(0, 3)) {
-    out.push({ kind: 'outcome', entry: e, question: `How did this turn out? “${e.text}”` });
+    out.push({ kind: 'outcome', entry: e, question: `How did this turn out? "${e.text}"` });
   }
 
   const yesterdayMoods = entries.filter((e) => e.type === 'feeling' && e.date === addDays(day, -1) && e.mood);

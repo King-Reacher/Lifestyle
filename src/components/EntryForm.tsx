@@ -11,7 +11,7 @@ import { Field, Sheet } from './ui';
 
 const PLACEHOLDER: Record<EntryType, string> = {
   did: 'e.g. Cleaned my room and planned tomorrow',
-  study: 'e.g. Maths — fractions and BODMAS',
+  study: 'e.g. Maths: fractions and BODMAS',
   'money-in': 'e.g. Paid for a design job',
   'money-out': 'e.g. Transport to school',
   decision: 'e.g. Decided to stop buying snacks daily and save the money',
@@ -46,7 +46,7 @@ export function EntryForm({ entry, initialType, onClose }: { entry?: Entry; init
   const isMoney = draft.type === 'money-in' || draft.type === 'money-out';
   const valid = draft.text.trim().length > 0 && (!isMoney || (draft.amount ?? 0) > 0);
 
-  // "Last time": your own history on the same thing — the ledger's memory.
+  // "Last time" shows your own history on the same thing.
   const recall =
     draft.type === 'decision' || draft.type === 'money-out'
       ? similarPast(data.entries, draft.text, { excludeId: draft.id, limit: 2 })
@@ -154,7 +154,7 @@ export function EntryForm({ entry, initialType, onClose }: { entry?: Entry; init
         <div className="recall">
           <div className="row" style={{ gap: 8, marginBottom: 2 }}>
             <Character who="ada" size={36} />
-            <span className="eyebrow">Mama Ada remembers — last time</span>
+            <span className="eyebrow">Mama Ada remembers: last time</span>
           </div>
           {recall.map(({ entry: past }) => (
             <EntryItem key={past.id} entry={past} showDate />

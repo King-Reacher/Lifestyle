@@ -19,7 +19,7 @@ export function Ledger() {
 
   return (
     <>
-      <Say who="zara" text={data.entries.length ? `${data.entries.length} entries on record. Ask me anything — search it like your own memory.` : 'Your ledger is empty. Log something and I’ll keep it safe.'} size={72} />
+      <Say who="zara" text={data.entries.length ? `${data.entries.length} entries on record. Search it like your own memory.` : "Your ledger is empty. Log something and I'll keep it safe."} size={72} />
       <input type="search" placeholder="Search… e.g. transport, decided, maths" value={query} onChange={(e) => setQuery(e.target.value)} />
       <div className="chips" style={{ marginTop: 10 }}>
         <button className={`chip ${!type ? 'selected' : ''}`} onClick={() => setType(null)}>

@@ -22,14 +22,14 @@ export function greeting(name: string, hour: number, day: string): { who: Who; t
     return pick(
       [
         { who: 'zara', text: `Afternoon check, ${n}. What have you done so far? I'll keep the record.` },
-        { who: 'tunde', text: `Halfway through the day! Don't let it slip — what's next?` },
+        { who: 'tunde', text: `Halfway through the day! Don't let it slip. What's next?` },
         { who: 'ada', text: `The afternoon decides the day, ${n}. Keep going.` },
       ],
       day,
     );
   return pick(
     [
-      { who: 'ada', text: `Evening, ${n}. Before you rest — what did today teach you?` },
+      { who: 'ada', text: `Evening, ${n}. Before you rest, what did today teach you?` },
       { who: 'zara', text: `Night shift. Log what happened today so tomorrow-you remembers.` },
       { who: 'tunde', text: `Close it out strong, ${n}! One more entry and today counts.` },
     ],
@@ -40,7 +40,7 @@ export function greeting(name: string, hour: number, day: string): { who: Who; t
 export function streakLine(streak: number, loggedToday: boolean): string {
   if (streak === 0) return "I'm just a spark. Log one thing and I'll come alive!";
   if (!loggedToday) return `${streak} days! Feed me one entry today or I go out. 😰`;
-  if (streak >= 30) return `${streak} days. You're not trying anymore — this is who you are.`;
+  if (streak >= 30) return `${streak} days. You're not trying anymore. This is who you are.`;
   if (streak >= 7) return `${streak} days straight! I'm burning bright. 🔥`;
   return `${streak} day${streak > 1 ? 's' : ''} and counting. Keep me lit!`;
 }

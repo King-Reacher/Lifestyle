@@ -14,7 +14,7 @@ const QUICK: EntryType[] = ['study', 'did', 'money-out', 'money-in', 'decision',
 
 const JOURNEY = [
   { icon: '📒', label: 'Your ledger', done: true },
-  { icon: '➗', label: 'JAMB Maths — foundations', done: true },
+  { icon: '➗', label: 'JAMB Maths foundations', done: true },
   { icon: '⚛️', label: 'Physics · Chemistry' },
   { icon: '🧬', label: 'English · Biology' },
   { icon: '💰', label: 'Money discipline' },
@@ -72,8 +72,8 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
         <div className="row">
           <Character who="mei" size={64} />
           <div className="grow">
-            <div className="eyebrow">Today’s lesson · {data.learn.xpByDay[date] ?? 0}/{DAILY_GOAL} XP</div>
-            <div style={{ fontWeight: 900, fontSize: 17, margin: '2px 0 8px' }}>{next ? `Maths: ${next.title}` : 'Maths: all lessons done — review time'}</div>
+            <div className="eyebrow">Today's lesson · {data.learn.xpByDay[date] ?? 0}/{DAILY_GOAL} XP</div>
+            <div style={{ fontWeight: 900, fontSize: 17, margin: '2px 0 8px' }}>{next ? `Maths: ${next.title}` : 'Maths: all lessons done, time to review'}</div>
             <button className="btn go sm" onClick={onLearn}>
               {next ? 'Start lesson' : 'Open Learn'}
             </button>
@@ -137,7 +137,7 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
           <span className="eyebrow gold">Step 2 of 7</span>
         </div>
         <p className="small muted" style={{ margin: '4px 0 14px' }}>
-          Each stop unlocks as it’s built. Lessons start from the very foundations.
+          Each stop unlocks as it's built. Lessons start from the very foundations.
         </p>
         <div className="path">
           {JOURNEY.map((j) => (

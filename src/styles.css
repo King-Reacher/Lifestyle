@@ -87,7 +87,7 @@ h2 {
   font-size: 13px;
 }
 
-/* ---------- surfaces ---------- */
+/* Surfaces */
 
 .card {
   background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
@@ -124,7 +124,7 @@ h2 {
   min-width: 0;
 }
 
-/* ---------- top bar ---------- */
+/* Top bar */
 
 .topbar {
   display: flex;
@@ -159,7 +159,7 @@ h2 {
   color: var(--fire);
 }
 
-/* ---------- chunky buttons ---------- */
+/* Chunky buttons */
 
 .btn {
   --c: var(--surface-3);
@@ -224,7 +224,7 @@ h2 {
   cursor: default;
 }
 
-/* ---------- characters ---------- */
+/* Characters */
 
 .char {
   flex: none;
@@ -269,6 +269,23 @@ h2 {
 
 .char.cheer .m-closed {
   opacity: 0;
+}
+
+.char-pic {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-2);
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+.char-pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @keyframes bob {
@@ -386,7 +403,7 @@ h2 {
   }
 }
 
-/* ---------- streak ---------- */
+/* Streak */
 
 .week {
   display: flex;
@@ -435,7 +452,7 @@ h2 {
   color: transparent;
 }
 
-/* ---------- stats ---------- */
+/* Stats */
 
 .stats {
   display: grid;
@@ -457,7 +474,7 @@ h2 {
   line-height: 1.1;
 }
 
-/* ---------- quick log ---------- */
+/* Quick log */
 
 .type-grid {
   display: grid;
@@ -498,7 +515,7 @@ h2 {
   background: color-mix(in srgb, var(--gold) 14%, var(--surface-2));
 }
 
-/* ---------- chips & inputs ---------- */
+/* Chips & inputs */
 
 .chips {
   display: flex;
@@ -578,7 +595,7 @@ select:focus {
   border-color: var(--gold);
 }
 
-/* ---------- entries ---------- */
+/* Entries */
 
 .entry {
   display: flex;
@@ -626,7 +643,7 @@ select:focus {
   margin: 10px 0;
 }
 
-/* ---------- journey teaser ---------- */
+/* Journey teaser */
 
 .path {
   display: flex;
@@ -677,7 +694,7 @@ select:focus {
   color: var(--muted);
 }
 
-/* ---------- FAB, tab bar ---------- */
+/* FAB, tab bar */
 
 .fab {
   position: fixed;
@@ -752,7 +769,7 @@ select:focus {
   background: color-mix(in srgb, var(--gold) 10%, transparent);
 }
 
-/* ---------- sheet, toast ---------- */
+/* Sheet, toast */
 
 .sheet-backdrop {
   position: fixed;
@@ -858,7 +875,7 @@ code {
   }
 }
 
-/* ================= Learn: path ================= */
+/* Learn: path */
 
 .course-chips {
   margin: 4px 0 12px;
@@ -1007,7 +1024,7 @@ code {
   }
 }
 
-/* ================= Learn: player ================= */
+/* Learn: player */
 
 .player {
   position: fixed;

@@ -60,7 +60,7 @@ export function correctAnswer(ex: Exercise): string {
   }
 }
 
-// ---------- session ----------
+// Session
 
 export interface Session {
   queue: Item[];
@@ -126,11 +126,11 @@ export function xpFor(s: Session): number {
   return LESSON_XP + (s.mistakes.length === 0 ? PERFECT_BONUS : 0);
 }
 
-// ---------- progress & spaced repetition ----------
+// Progress and spaced repetition
 
 export interface ReviewItem {
   ex: Exercise;
-  /** Leitner box 1–5; higher means better known, reviewed less often. */
+  /** Leitner box 1 to 5. Higher means better known and reviewed less often. */
   box: number;
   due: ISODate;
 }

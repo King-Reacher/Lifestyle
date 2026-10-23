@@ -16,9 +16,9 @@ export function You({ userId }: { userId: number | null }) {
     try {
       await navigator.clipboard.writeText(backup);
       haptic('success');
-      setMsg('Backup copied. Paste it into your Telegram “Saved Messages” to keep it safe.');
+      setMsg('Backup copied. Paste it into your Telegram "Saved Messages" to keep it safe.');
     } catch {
-      setMsg('Couldn’t copy automatically. Long-press the box below and copy it.');
+      setMsg("Couldn't copy automatically. Long-press the box below and copy it.");
     }
   };
 
@@ -26,7 +26,7 @@ export function You({ userId }: { userId: number | null }) {
     const parsed = parseData(restoreText);
     if (!parsed) {
       haptic('error');
-      setMsg('That doesn’t look like a backup. Paste the whole text you copied.');
+      setMsg("That doesn't look like a backup. Paste the whole text you copied.");
       return;
     }
     if (!(await confirmAction(`Replace your ledger with this backup (${parsed.entries.length} entries)?`))) return;
@@ -44,7 +44,7 @@ export function You({ userId }: { userId: number | null }) {
 
   return (
     <>
-      <Say who="ada" text="What you write here stays between you and this phone. Still — keep a backup, my child." size={80} />
+      <Say who="ada" text="What you write here stays between you and this phone. Still, keep a backup, my child." size={80} />
 
       <div className="card">
         <h2>🔒 Private</h2>
@@ -68,7 +68,7 @@ export function You({ userId }: { userId: number | null }) {
         <button className="btn primary block" onClick={copyBackup}>
           Copy backup
         </button>
-        <Field label="Restore — paste a backup here">
+        <Field label="Restore: paste a backup here">
           <textarea value={restoreText} onChange={(e) => setRestoreText(e.target.value)} />
         </Field>
         <button className="btn block" onClick={restore} disabled={!restoreText.trim()}>

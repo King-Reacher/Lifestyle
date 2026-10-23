@@ -1,7 +1,7 @@
 import type { Course, Exercise, Lesson, Rng } from './types';
 import { br, choice, frac, gcd, int, lcm, num, pickOne, simplify } from './util';
 
-/* ================= Unit 1: Number foundations ================= */
+/* Unit 1: Number foundations */
 
 const typesOfNumbers: Lesson = {
   id: 'm1-types',
@@ -18,7 +18,7 @@ const typesOfNumbers: Lesson = {
         'Whole numbers are the natural numbers plus 0.',
         'Integers add the negatives: …, −2, −1, 0, 1, 2, …',
         'Rational numbers can be written as a fraction p/q (q ≠ 0): 1/2, −3, 0.75, 0.333…',
-        'Irrational numbers can’t: √2, π. Their decimals never end and never repeat.',
+        "Irrational numbers can't: √2, π. Their decimals never end and never repeat.",
       ],
       hook: {
         kind: 'memory',
@@ -263,13 +263,13 @@ const bodmas: Lesson = {
       who: 'mei',
       title: 'BODMAS decides what goes first',
       body: [
-        'B — Brackets',
-        'O — Orders (powers and roots)',
-        'D M — Division and Multiplication: equal rank, go left to right',
-        'A S — Addition and Subtraction: equal rank, go left to right',
+        'B: Brackets',
+        'O: Orders (powers and roots)',
+        'D, M: Division and Multiplication have equal rank, so go left to right',
+        'A, S: Addition and Subtraction have equal rank, so go left to right',
       ],
       example: ['2 + 3 × 4 = 2 + 12 = 14 (not 20)', '20 ÷ 4 × 5 = 5 × 5 = 25 (left to right)'],
-      hook: { kind: 'memory', text: 'BODMAS trap: D doesn’t beat M, and A doesn’t beat S. Partners of equal rank — whoever comes first from the left goes first.' },
+      hook: { kind: 'memory', text: "BODMAS trap: D doesn't beat M, and A doesn't beat S. They are partners of equal rank, so whichever comes first from the left goes first." },
     },
   ],
   exercises: [
@@ -352,7 +352,7 @@ const factors: Lesson = {
       kind: 'eliminate',
       text: '10, 15 and 4 are not prime, so those options are out immediately.',
     }),
-    { kind: 'input', id: 'm1-factors-4', prompt: 'How many factors does 12 have?', answers: ['6'], explain: '1, 2, 3, 4, 6, 12 — six factors. Find them in pairs: 1×12, 2×6, 3×4.' },
+    { kind: 'input', id: 'm1-factors-4', prompt: 'How many factors does 12 have?', answers: ['6'], explain: '1, 2, 3, 4, 6, 12 makes six factors. Find them in pairs: 1×12, 2×6, 3×4.' },
     divisibleBy(9),
     {
       kind: 'match',
@@ -415,7 +415,7 @@ const hcfLcm: Lesson = {
     hcfGen,
     choiceStatic('m1-hcf-1', 'HCF of 24 and 36 is…', ['6', '12', '72', '4'], 1, '24 = 2³ × 3, 36 = 2² × 3². Lowest powers of shared primes: 2² × 3 = 12.'),
     lcmGen,
-    choiceStatic('m1-hcf-2', 'LCM of 4, 6 and 8 is…', ['48', '24', '12', '192'], 1, 'Multiples of 8: 8, 16, 24. 24 is divisible by 4 and 6 — so 24.'),
+    choiceStatic('m1-hcf-2', 'LCM of 4, 6 and 8 is…', ['48', '24', '12', '192'], 1, 'Multiples of 8: 8, 16, 24. 24 is divisible by 4 and 6, so the answer is 24.'),
     { kind: 'input', id: 'm1-hcf-3', prompt: 'Two numbers have HCF 6 and their product is 216. Their LCM is?', answers: ['36'], explain: 'LCM = product ÷ HCF = 216 ÷ 6 = 36.', tip: { kind: 'formula', text: 'HCF × LCM = a × b' } },
     { kind: 'truefalse', id: 'm1-hcf-4', prompt: 'The LCM of 5 and 7 is 35.', answer: true, explain: '5 and 7 share no factors, so their LCM is just 5 × 7 = 35.' },
     choiceStatic('m1-hcf-5', 'Two bells ring every 6 and 8 minutes. They ring together now. When do they next ring together?', ['14 min', '48 min', '24 min', '2 min'], 2, 'You need the LCM of 6 and 8: 24 minutes.', {
@@ -426,7 +426,7 @@ const hcfLcm: Lesson = {
   ],
 };
 
-/* ================= Unit 2: Fractions, decimals & percentages ================= */
+/* Unit 2: Fractions, decimals and percentages */
 
 /** A proper fraction already in lowest terms, so questions never show things like 2/4 or 4/4. */
 function properFraction(rng: Rng, exceptDen?: number): [number, number] {
@@ -457,7 +457,7 @@ const fractionsBasics: Lesson = {
       title: 'Top counts, bottom names',
       body: [
         'In 3/4, the denominator (4) says how many equal parts the whole is cut into. The numerator (3) says how many you have.',
-        'Multiply or divide top AND bottom by the same number and the value doesn’t change: 2/3 = 4/6 = 8/12.',
+        "Multiply or divide top AND bottom by the same number and the value doesn't change: 2/3 = 4/6 = 8/12.",
         'Simplest form: divide top and bottom by their HCF.',
       ],
       example: ['18/24 → HCF is 6 → 3/4'],
@@ -584,7 +584,7 @@ const mulFractions: Lesson = {
       title: 'Dividing: Keep, Change, Flip',
       body: ['Keep the first fraction.', 'Change ÷ to ×.', 'Flip the second fraction upside down.'],
       example: ['2/5 ÷ 4/3 = 2/5 × 3/4 = 6/20 = 3/10'],
-      hook: { kind: 'memory', text: 'KCF — Keep, Change, Flip. Picture a kite: keep hold, change direction, flip it over.' },
+      hook: { kind: 'memory', text: 'KCF means Keep, Change, Flip. Picture a kite: keep hold, change direction, flip it over.' },
     },
   ],
   exercises: [
@@ -693,7 +693,7 @@ const percentages: Lesson = {
       title: 'The swap trick',
       body: ['x% of y = y% of x. Pick whichever is easier.'],
       example: ['8% of 50 = 50% of 8 = 4'],
-      hook: { kind: 'shortcut', text: 'Both are just (x × y) ÷ 100 — that’s why swapping works.' },
+      hook: { kind: 'shortcut', text: "Both are just (x × y) ÷ 100, which is why swapping works." },
     },
   ],
   exercises: [
@@ -783,7 +783,7 @@ const percentChange: Lesson = {
   ],
 };
 
-/* ================= Unit 3: Speed maths ================= */
+/* Unit 3: Speed maths */
 
 const times5Gen = (rng: Rng): Exercise => {
   const m = pickOne(rng, [5, 25, 50] as const);
@@ -811,8 +811,8 @@ const times11Gen = (rng: Rng): Exercise => {
     explain:
       s < 10
         ? `Split ${a}_${b}, put ${a} + ${b} = ${s} in the middle: ${a}${s}${b}.`
-        : `Split ${a}_${b}, middle is ${a} + ${b} = ${s} — carry the 1: ${a + 1}${s - 10}${b}.`,
-    tip: { kind: 'shortcut', text: 'Two-digit × 11: split the digits and put their sum in the middle (carry if it’s 10+).' },
+        : `Split ${a}_${b}, middle is ${a} + ${b} = ${s}, so carry the 1: ${a + 1}${s - 10}${b}.`,
+    tip: { kind: 'shortcut', text: "Two-digit × 11: split the digits and put their sum in the middle (carry if it's 10 or more)." },
   };
 };
 
@@ -842,7 +842,7 @@ const estimateGen = (rng: Rng): Exercise => {
     rng,
     {
       id: 'm3-est',
-      prompt: `${a} × ${b} = ?  (don’t multiply it out)`,
+      prompt: `${a} × ${b} = ?  (don't multiply it out)`,
       explain: `Last digits: ${a % 10} × ${b % 10} ends in ${(a * b) % 10}. Size: between ${lo(a)} × ${lo(b)} = ${lo(a) * lo(b)} and ${hi(a)} × ${hi(b)} = ${hi(a) * hi(b)}. Only ${right} passes both checks.`,
       tip: { kind: 'eliminate', text: 'Two quick checks kill most options: the last digit, and a rough size estimate.' },
     },
@@ -897,7 +897,7 @@ const speed: Lesson[] = [
         title: 'Front × next, then 25',
         body: ['Take the digits in front of the 5, multiply by the next number up, then write 25 after it.'],
         example: ['35² → 3 × 4 = 12 → 1225', '85² → 8 × 9 = 72 → 7225'],
-        hook: { kind: 'formula', text: '(10t + 5)² = 100·t(t + 1) + 25. That’s the whole trick.' },
+        hook: { kind: 'formula', text: "(10t + 5)² = 100·t(t + 1) + 25. That's the whole trick." },
       },
     ],
     exercises: [square5Gen, square5Gen, square5Gen, square5Gen, square5Gen],
@@ -918,7 +918,7 @@ const speed: Lesson[] = [
           'Most wrong options fail one of the two checks. In an exam this saves minutes.',
         ],
         example: ['49 × 21: ends in 9 (9 × 1), between 40 × 20 = 800 and 50 × 30 = 1500 → 1029'],
-        hook: { kind: 'eliminate', text: 'Never skip the reasoning — do the reasoning faster. Check, eliminate, then commit.' },
+        hook: { kind: 'eliminate', text: 'Never skip the reasoning. Do the reasoning faster. Check, eliminate, then commit.' },
       },
     ],
     exercises: [estimateGen, estimateGen, estimateGen, estimateGen, estimateGen],

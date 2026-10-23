@@ -16,11 +16,36 @@ export const CAST: Record<Who, { name: string; role: string; color: string }> = 
 type Mood = 'idle' | 'talking' | 'cheer';
 
 /**
+ * Optional picture art. Drop `<who>.png` (or .webp/.jpg) into src/assets/cast
+ * and that character uses it instead of the drawn SVG. A `<who>-talk.png`
+ * frame with the mouth open makes the picture lip-sync while talking.
+ */
+const PICTURE_FILES = import.meta.glob<string>('../assets/cast/*.{png,webp,jpg,jpeg}', { eager: true, query: '?url', import: 'default' });
+
+const PICTURES: Partial<Record<Who, { idle: string; talk?: string }>> = {};
+for (const [path, url] of Object.entries(PICTURE_FILES)) {
+  const m = path.match(/\/([a-z]+)(-talk)?\.\w+$/);
+  if (!m || !(m[1] in CAST)) continue;
+  const who = m[1] as Who;
+  PICTURES[who] = { ...PICTURES[who], [m[2] ? 'talk' : 'idle']: url } as { idle: string; talk?: string };
+}
+for (const who of Object.keys(PICTURES) as Who[]) if (!PICTURES[who]!.idle) delete PICTURES[who];
+
+/**
  * An animated anime-style character. Blinks and bobs while idle, moves its
  * mouth while talking, and jumps when cheering. Respects reduced motion via CSS.
  */
 export function Character({ who, mood = 'idle', size = 88 }: { who: Who; mood?: Mood; size?: number }) {
   const id = useId().replace(/:/g, '');
+  const pic = PICTURES[who];
+  if (pic) {
+    return (
+      <span className={`char char-pic ${mood}`} style={{ width: size, height: size }} role="img" aria-label={CAST[who].name}>
+        <img className={pic.talk ? 'm-closed' : undefined} src={pic.idle} alt="" draggable={false} />
+        {pic.talk && <img className="m-open" src={pic.talk} alt="" draggable={false} />}
+      </span>
+    );
+  }
   const Art = ART[who];
   return (
     <svg className={`char char-${who} ${mood}`} width={size} height={size} viewBox="0 0 120 120" aria-label={CAST[who].name} role="img">
@@ -29,7 +54,7 @@ export function Character({ who, mood = 'idle', size = 88 }: { who: Who; mood?: 
   );
 }
 
-/* ---------------- shared anime parts ---------------- */
+/* Shared anime parts */
 
 const LINE = '#241622';
 
@@ -189,7 +214,6 @@ function Face({ skin, shade, ears = false }: { skin: string; shade: string; ears
   );
 }
 
-/** Shoulders, outlined. */
 function Body({ color, shade, children }: { color: string; shade: string; children?: ReactNode }) {
   return (
     <Ink>
@@ -206,7 +230,7 @@ const Gloss = ({ d, color = '#fff', o = 0.35 }: { d: string; color?: string; o?:
 /** Strand lines drawn inside hair. */
 const Strands = ({ d, o = 0.55 }: { d: string; o?: number }) => <path d={d} stroke={LINE} strokeWidth="0.8" fill="none" opacity={o} strokeLinecap="round" />;
 
-/* ---------------- the cast ---------------- */
+/* The cast */
 
 function Ada({ id }: { id: string }) {
   const skin = '#9c5c36';

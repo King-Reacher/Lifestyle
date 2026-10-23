@@ -22,12 +22,12 @@ import type { Exercise, Teach, Tip } from '../types';
 import { ExerciseView, PROMPT_LABEL } from './Exercises';
 
 const PRAISE: { who: Who; text: string }[] = [
-  { who: 'tunde', text: 'Correct! You’re on fire!' },
+  { who: 'tunde', text: "Correct! You're on fire!" },
   { who: 'mei', text: 'Exactly right. Clean work.' },
   { who: 'maddie', text: 'Nailed it! 🙌' },
   { who: 'priya', text: 'Beautiful. Keep that rhythm.' },
   { who: 'greta', text: 'Precisely. Well reasoned.' },
-  { who: 'zara', text: 'Correct — logged in your brain.' },
+  { who: 'zara', text: 'Correct, and logged in your brain.' },
 ];
 
 const TIP_ICON: Record<Tip['kind'], string> = { shortcut: '⚡ Shortcut', eliminate: '🎯 Eliminate', formula: '📐 Formula', memory: '🧠 Memory' };
@@ -147,7 +147,7 @@ export function Player({
       <div className="player center">
         <Character who="ada" size={140} mood="talking" />
         <h1>Out of hearts</h1>
-        <p className="muted">No shame in it, my child. Mistakes are where the learning is. Try again — this time slower.</p>
+        <p className="muted">No shame in it, my child. Mistakes are where the learning is. Try again, slower this time.</p>
         <button className="btn primary block" onClick={() => onExit({ session, completed: false, minutes })}>
           Back to path
         </button>
@@ -178,7 +178,7 @@ export function Player({
             <div className="stat">⏱ {minutes}m</div>
           </div>
         </div>
-        <p className="small muted">{acc === 100 ? 'Perfect lesson — bonus XP earned!' : `${session.mistakes.length} to review later. They’ll come back until they stick.`}</p>
+        <p className="small muted">{acc === 100 ? 'Perfect lesson. Bonus XP earned!' : `${session.mistakes.length} to review later. They'll come back until they stick.`}</p>
         <button className="btn go block" onClick={() => onExit({ session, completed: true, minutes })}>
           Continue
         </button>

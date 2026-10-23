@@ -67,7 +67,7 @@ export function normalise(s: string): string {
   return s
     .trim()
     .toLowerCase()
-    .replace(/[−–—]/g, '-')
+    .replace(/[\u2212\u2013\u2014]/g, '-')
     .replace(/[₦,%]/g, '')
     .replace(/\s+/g, ' ');
 }

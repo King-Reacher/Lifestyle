@@ -54,7 +54,7 @@ export function Learn() {
           date,
           type: 'study',
           area: 'jamb',
-          text: `Maths: ${lesson.title} — ${correctFirst}/${r.session.graded} right first try`,
+          text: `Maths: ${lesson.title}, ${correctFirst}/${r.session.graded} right first try`,
           minutes: r.minutes,
         },
       ],
@@ -108,7 +108,7 @@ export function Learn() {
 
       {!selected.ready ? (
         <div className="card" style={{ marginTop: 18 }}>
-          <Say who={selected.who} text={`${selected.title} is being prepared from the very foundations. Finish Maths Unit 1 meanwhile — it trains the skills every subject uses.`} size={80} />
+          <Say who={selected.who} text={`${selected.title} is being prepared from the very foundations. Finish Maths Unit 1 meanwhile. It trains the skills every subject uses.`} size={80} />
         </div>
       ) : (
         <>
