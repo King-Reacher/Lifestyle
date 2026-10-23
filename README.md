@@ -98,6 +98,22 @@ Every subject has its foundation units built. Each course lists its next units o
   - Five inventions ticks the career milestone automatically.
 - **Editor:** Enter after `{` closes the block for you, with the cursor indented inside it.
 
+## Content so far
+
+87 lessons and about 460 exercise slots. Most maths and science exercises generate new numbers each time.
+
+| Course | Units |
+| --- | --- |
+| Mathematics | Number foundations; fractions, decimals and percentages; speed maths; bases, indices and standard form; algebra and changing the subject |
+| English | Grammar foundations; words; idioms, prepositions and vocabulary; JAMB drills |
+| Physics | Measurement and motion; matter and forces; energy |
+| Chemistry | Matter and atoms; formulas and the mole; reactions (balancing, acids, bases and salts) |
+| Biology | Life and the cell; feeding and ecology; body systems; JAMB drills |
+| Coding | How computers work; JavaScript first steps; decisions and loops; functions, arrays and objects; problem solving; array methods, recursion and sorting |
+| Academy | Schools 1 to 12 |
+
+A full JAMB simulation now has enough distinct questions in every subject (60 English, 40 for each of the others), and a test keeps it that way. Each course lists its next units on its own path.
+
 ## Put it on Telegram
 
 1. **Create the bot.** In Telegram, open [@BotFather](https://t.me/BotFather) and send `/newbot`.

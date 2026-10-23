@@ -23,7 +23,7 @@ import {
   xpFor,
 } from './engine';
 import { config, groupPeriod, molarMass } from './courses/chemistry';
-import { allLessons, CHEMISTRY, COURSES, ENGLISH, MATHS, PHYSICS } from './courses';
+import { allLessons, BIOLOGY, CHEMISTRY, COURSES, ENGLISH, MATHS, PHYSICS } from './courses';
 import { buildExam, drawQuestions, scoreExam } from './exam';
 import { coverage, keyIdeas, termsIn } from './glossary';
 import type { Exercise, InputEx } from './types';
@@ -131,6 +131,15 @@ describe('mock exams', () => {
     const english = drawQuestions(ENGLISH, 60, 7);
     expect(english.length).toBeLessThanOrEqual(60);
     expect(new Set(english.map((e) => e.prompt)).size).toBe(english.length);
+  });
+
+  it('fills a complete full-JAMB paper in every subject without repeating a question', () => {
+    for (const course of [ENGLISH, MATHS, PHYSICS, CHEMISTRY, BIOLOGY]) {
+      const want = course.id === 'english' ? 60 : 40;
+      const qs = drawQuestions(course, want, 11);
+      expect(qs, course.id).toHaveLength(want);
+      expect(new Set(qs.map((q) => q.prompt)).size, course.id).toBe(want);
+    }
   });
 
   it('fills a full JAMB maths paper with generated questions', () => {
