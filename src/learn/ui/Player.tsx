@@ -246,8 +246,12 @@ export function Player({
             </div>
           ) : (
             <>
-              <div className="fb-title">Not quite. Correct answer:</div>
-              <div className="fb-answer">{correctAnswer(ex)}</div>
+              <div className="fb-title">{ex.kind === 'code' ? 'Not yet. One way to write it:' : 'Not quite. Correct answer:'}</div>
+              {ex.kind === 'code' ? (
+                <pre className="solution-code">{ex.solution}</pre>
+              ) : (
+                <div className="fb-answer">{correctAnswer(ex)}</div>
+              )}
               <p className="fb-explain">{ex.explain}</p>
             </>
           )}

@@ -3,6 +3,7 @@ import type { Course, Lesson } from '../types';
 import { ACADEMY } from './academy';
 import { BIOLOGY } from './biology';
 import { CHEMISTRY } from './chemistry';
+import { CODING } from './coding';
 import { ENGLISH } from './english';
 import { MATHS } from './maths';
 import { PHYSICS } from './physics';
@@ -20,6 +21,7 @@ export const COURSES: CourseInfo[] = [
   { course: PHYSICS, who: 'greta', jamb: true },
   { course: CHEMISTRY, who: 'greta', jamb: true },
   { course: BIOLOGY, who: 'priya', jamb: true },
+  { course: CODING, who: 'zara', jamb: false },
   { course: ACADEMY, who: 'zara', jamb: false },
 ];
 
@@ -29,4 +31,4 @@ export function allLessons(course: Course): Lesson[] {
   return course.units.flatMap((u) => u.lessons);
 }
 
-export { ACADEMY, BIOLOGY, CHEMISTRY, ENGLISH, MATHS, PHYSICS };
+export { ACADEMY, BIOLOGY, CHEMISTRY, CODING, ENGLISH, MATHS, PHYSICS };

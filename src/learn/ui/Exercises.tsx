@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { haptic } from '../../lib/telegram';
 import { checkInput } from '../engine';
-import type { ChoiceEx, Exercise, InputEx, MatchEx, OrderEx, TrueFalseEx } from '../types';
+import { CodeEditor } from '../../code/CodeEditor';
+import { passed, run, type RunResult } from '../../code/runner';
+import type { ChoiceEx, CodeEx, Exercise, InputEx, MatchEx, OrderEx, TrueFalseEx } from '../types';
 import { seeded, shuffle } from '../util';
 
 /** Reports whether an answer is ready, whether it's right, and the raw answer so exam mode can restore it. */
@@ -192,6 +194,71 @@ function MatchView({ ex, onPenalty, onSolved }: { ex: MatchEx; onPenalty: () => 
   );
 }
 
+export function ConsoleView({ result, expected }: { result: RunResult | null; expected?: string[] }) {
+  if (!result) return null;
+  return (
+    <div className="console">
+      {result.output.length === 0 && !result.error && <div className="dim">(no output)</div>}
+      {result.output.map((line, i) => (
+        <div key={i}>{line}</div>
+      ))}
+      {result.error && <div className="err">✕ {result.error}</div>}
+      {expected && (
+        <div className="dim" style={{ marginTop: 6 }}>
+          Expected output: {expected.join(' ⏎ ')}
+        </div>
+      )}
+      {result.results.map((r) => (
+        <div key={r.call} className={r.ok ? 'ok' : 'bad'}>
+          {r.ok ? '✓' : '✕'} {r.call} → {r.got}
+          {!r.ok && <span className="dim"> (expected {r.expect})</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CodeView({ ex, locked, onChange, initial }: ViewProps<CodeEx>) {
+  const [code, setCode] = useState(typeof initial === 'string' ? initial : ex.starter);
+  const [result, setResult] = useState<RunResult | null>(null);
+  const [guide, setGuide] = useState(true);
+  const [running, setRunning] = useState(false);
+
+  const edit = (next: string) => {
+    setCode(next);
+    setResult(null);
+    // A changed program must be run again before it can be checked.
+    onChange(false, false, next);
+  };
+
+  const go = async () => {
+    setRunning(true);
+    const r = await run(code, ex.checks);
+    setRunning(false);
+    setResult(r);
+    const ok = passed(r, ex.output);
+    haptic(ok ? 'success' : 'error');
+    onChange(true, ok, code);
+  };
+
+  return (
+    <>
+      <div className="row between" style={{ marginBottom: 4 }}>
+        <label className="row small" style={{ gap: 6, fontWeight: 800 }}>
+          <input type="checkbox" checked={guide} onChange={(e) => setGuide(e.target.checked)} />
+          Guide me (ghost text)
+        </label>
+        <button className="btn sm primary" onClick={go} disabled={locked || running}>
+          {running ? 'Running…' : '▶ Run'}
+        </button>
+      </div>
+      <CodeEditor value={code} onChange={locked ? () => {} : edit} solution={guide ? ex.solution : undefined} />
+      <ConsoleView result={result} expected={result && !passed(result, ex.output) ? ex.output : undefined} />
+      {!result && <p className="small muted">Run your code, then press Check. Tap ⇥ Accept to take a ghost suggestion.</p>}
+    </>
+  );
+}
+
 export function ExerciseView({
   ex,
   locked,
@@ -218,6 +285,8 @@ export function ExerciseView({
       return <OrderView ex={ex} locked={locked} onChange={onChange} />;
     case 'match':
       return <MatchView ex={ex} onPenalty={onPenalty} onSolved={onSolved} />;
+    case 'code':
+      return <CodeView ex={ex} locked={locked} onChange={onChange} initial={initial} />;
   }
 }
 
@@ -227,4 +296,5 @@ export const PROMPT_LABEL: Record<Exercise['kind'], string> = {
   input: 'Type the answer',
   order: 'Put it in order',
   match: 'Tap the matching pairs',
+  code: 'Write the code',
 };

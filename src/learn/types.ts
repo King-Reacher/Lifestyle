@@ -1,3 +1,4 @@
+import type { Check } from '../code/runner';
 import type { Who } from '../components/Character';
 
 /** Which of the three mastery systems (or memory) a tip trains. */
@@ -52,7 +53,17 @@ export interface MatchEx extends Base {
   pairs: [string, string][];
 }
 
-export type Exercise = ChoiceEx | InputEx | TrueFalseEx | OrderEx | MatchEx;
+/** Write code that passes checks. `solution` also drives the ghost-text guide. */
+export interface CodeEx extends Base {
+  kind: 'code';
+  starter: string;
+  solution: string;
+  /** Expected console output, line by line. */
+  output?: string[];
+  checks?: Check[];
+}
+
+export type Exercise = ChoiceEx | InputEx | TrueFalseEx | OrderEx | MatchEx | CodeEx;
 
 /** A teaching card: understand first, then practise. */
 export interface Teach {

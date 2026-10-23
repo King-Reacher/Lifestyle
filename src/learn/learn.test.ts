@@ -49,8 +49,11 @@ describe('course content', () => {
           for (const ex of exercises) {
             const where = `${lesson.id} ${ex.id} seed ${seed}: ${ex.prompt}`;
             expect(ex.explain.length, where).toBeGreaterThan(5);
-            expect(ex.prompt, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
-            expect(ex.explain, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
+            // Catch broken template values; coding lessons talk about undefined on purpose.
+            if (course.id !== 'coding') {
+              expect(ex.prompt, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
+              expect(ex.explain, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
+            }
             if (ex.kind === 'choice') {
               expect(ex.options.length, where).toBeGreaterThanOrEqual(3);
               expect(new Set(ex.options).size, where).toBe(ex.options.length);

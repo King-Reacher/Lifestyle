@@ -61,6 +61,28 @@ Every subject has its foundation units built. Each course lists its next units o
   - It also shows similar moments from your ledger.
   - Saving the decision means you'll be asked how it turned out.
 
+## Software engineering
+
+- **Coding course with Zara (12 lessons, 22 code exercises):**
+  1. How computers work and binary
+  2. JavaScript first steps: printing, variables and types, operators and strings
+  3. if/else and loops
+  4. Functions, arrays and objects
+  5. Problem solving, searching and Big O
+- **Code exercises:** you type real code in an editor with syntax colours.
+  - **Run** executes it in a sandboxed Web Worker; infinite loops are stopped after 2 seconds.
+  - Checks show what passed and what you got instead. **Check** commits the answer.
+  - A wrong answer shows one way to write it.
+- **Ghost text, no AI:**
+  - In lessons, the model solution suggests the rest of the line in faded text as you type. Hint comments and spacing differences don't stop it.
+  - Everywhere, keywords, snippets (`for`, `if`, `function`…), common methods (`.push(`, `.length`…) and names you've already written are completed.
+  - Tab or **⇥ Accept** takes a suggestion. A key row gives phone users quick access to `{ } ( ) [ ] ; = " '`.
+- **Code lab:** a free playground, saved on the device, with starter programs (FizzBuzz, a savings plan, a grade report).
+- **Career path:** six stages (foundations, the web, frontend, backend and data, professional engineer, specialise), each with skills and portfolio milestones to tick off.
+- **Tests:**
+  - Every model solution passes and every starter fails.
+  - A simulated learner who only follows the ghost text rebuilds a working solution for every exercise.
+
 ## Put it on Telegram
 
 1. **Create the bot.** In Telegram, open [@BotFather](https://t.me/BotFather) and send `/newbot`.

@@ -6,6 +6,8 @@ import { haptic } from '../../lib/telegram';
 import { COURSES } from '../courses';
 import { buildLesson, DAILY_GOAL, dueReviews, lessonStatus, recordLesson, reviewResult, studyStreak, type Item } from '../engine';
 import type { Course, Lesson } from '../types';
+import { CodeLab } from '../../code/CodeLab';
+import { CareerPath } from './CareerPath';
 import { ExamHall } from './ExamHall';
 import { Player, type PlayerResult } from './Player';
 
@@ -18,6 +20,7 @@ export function Learn() {
   const { data, update, cheer } = useStore();
   const [tab, setTab] = useState('maths');
   const [playing, setPlaying] = useState<Playing | null>(null);
+  const [sub, setSub] = useState<'career' | 'lab' | null>(null);
   const date = today();
   const learn = data.learn;
   const due = dueReviews(learn.review, date);
@@ -77,6 +80,9 @@ export function Learn() {
     );
   }
 
+  if (sub === 'lab') return <CodeLab onBack={() => setSub(null)} />;
+  if (sub === 'career') return <CareerPath onBack={() => setSub(null)} />;
+
   return (
     <>
       <div className="chips course-chips">
@@ -108,6 +114,21 @@ export function Learn() {
               Review now
             </button>
           </Say>
+        </div>
+      )}
+
+      {tab === 'coding' && (
+        <div className="coding-tools">
+          <button className="tool-card" onClick={() => (haptic(), setSub('career'))}>
+            <div className="big">🧭</div>
+            <b>Career path</b>
+            <div className="small muted">6 stages to software engineer</div>
+          </button>
+          <button className="tool-card" onClick={() => (haptic(), setSub('lab'))}>
+            <div className="big">🧪</div>
+            <b>Code lab</b>
+            <div className="small muted">Write and run your own code</div>
+          </button>
         </div>
       )}
 

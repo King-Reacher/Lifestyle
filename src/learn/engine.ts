@@ -58,6 +58,8 @@ export function correctAnswer(ex: Exercise): string {
       return ex.tiles.join(' → ');
     case 'match':
       return ex.pairs.map(([a, b]) => `${a} = ${b}`).join(', ');
+    case 'code':
+      return ex.solution;
   }
 }
 

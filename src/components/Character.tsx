@@ -5,7 +5,7 @@ export type Who = 'ada' | 'tunde' | 'zara' | 'blaze' | 'greta' | 'mei' | 'maddie
 export const CAST: Record<Who, { name: string; role: string; color: string }> = {
   ada: { name: 'Mama Ada', role: 'Wisdom & money', color: '#a78bfa' },
   tunde: { name: 'Tunde', role: 'Study buddy', color: '#2dd4bf' },
-  zara: { name: 'Zara', role: 'Ledger keeper', color: '#ff7a45' },
+  zara: { name: 'Zara', role: 'Code & ledger', color: '#ff7a45' },
   blaze: { name: 'Blaze', role: 'Streak keeper', color: '#ff9f1c' },
   greta: { name: 'Prof. Greta', role: 'Science · Germany', color: '#60a5fa' },
   mei: { name: 'Mei', role: 'Maths · China', color: '#f43f5e' },

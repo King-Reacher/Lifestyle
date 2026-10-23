@@ -1428,3 +1428,225 @@ code {
   padding: 10px 6px;
   white-space: nowrap;
 }
+
+/* Code editor */
+
+.code-editor {
+  margin-top: 6px;
+}
+
+input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  padding: 0;
+  flex: none;
+  accent-color: var(--green);
+}
+
+.code-wrap {
+  position: relative;
+  min-height: 160px;
+  max-height: 46dvh;
+  border-radius: 16px;
+  background: #070b16;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  /* Ligatures turn === into one glyph and can push the caret out of line with the text. */
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
+}
+
+.code-wrap:focus-within {
+  border-color: var(--gold);
+}
+
+.code-layer,
+.code-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 12px 14px;
+  font: inherit;
+  line-height: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  tab-size: 2;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  min-height: 0;
+}
+
+.code-layer {
+  color: #e6edf7;
+  pointer-events: none;
+}
+
+.code-input {
+  scrollbar-width: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--gold);
+  resize: none;
+  font-weight: 400;
+}
+
+.code-input:focus {
+  outline: none;
+}
+
+.tok-kw {
+  color: #c792ea;
+}
+
+.tok-str {
+  color: #c3e88d;
+}
+
+.tok-num {
+  color: #f78c6c;
+}
+
+.tok-com {
+  color: #5c6b8a;
+  font-style: italic;
+}
+
+.tok-fn {
+  color: #82aaff;
+}
+
+.ghost-text {
+  color: #5c6b8a;
+  opacity: 0.85;
+}
+
+.code-keys {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 0 2px;
+  scrollbar-width: none;
+}
+
+.code-key {
+  flex: none;
+  min-width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--surface-2);
+  box-shadow: 0 3px 0 #111a33;
+  font-family: ui-monospace, Menlo, monospace;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.code-key.accept {
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.code-key.accept.on {
+  background: var(--gold);
+  color: #231703;
+  box-shadow: 0 3px 0 var(--gold-deep);
+}
+
+.console {
+  font-variant-ligatures: none;
+  margin-top: 10px;
+  border-radius: 14px;
+  background: #04070f;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 30dvh;
+  overflow: auto;
+}
+
+.console .err {
+  color: var(--red);
+}
+
+.console .ok {
+  color: var(--green);
+}
+
+.console .bad {
+  color: var(--red);
+}
+
+.console .dim {
+  color: var(--muted);
+}
+
+.solution-code {
+  font-variant-ligatures: none;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #04070f;
+  color: #e6edf7;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* Career path */
+
+.milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.milestone input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  accent-color: var(--green);
+  flex: none;
+  margin-top: 1px;
+}
+
+.milestone .done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.coding-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tool-card {
+  text-align: left;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #111a33;
+}
+
+.tool-card .big {
+  font-size: 26px;
+}

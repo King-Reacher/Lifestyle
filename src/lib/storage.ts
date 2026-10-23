@@ -1,5 +1,13 @@
 import { emptyLearn, type LearnState } from '../learn/engine';
 import { emptyMoney, type MoneyState } from './money';
+
+/** Code lab scratchpad and ticked career milestones. */
+export interface CodeState {
+  scratch: string;
+  career: Record<string, boolean>;
+}
+
+export const emptyCode = (): CodeState => ({ scratch: '', career: {} });
 import type { Entry } from './ledger';
 import { getWebApp } from './telegram';
 
@@ -10,11 +18,12 @@ export interface AppData {
   entries: Entry[];
   learn: LearnState;
   money: MoneyState;
+  code: CodeState;
   createdAt: string;
 }
 
 export function emptyData(): AppData {
-  return { version: 1, entries: [], learn: emptyLearn(), money: emptyMoney(), createdAt: new Date().toISOString() };
+  return { version: 1, entries: [], learn: emptyLearn(), money: emptyMoney(), code: emptyCode(), createdAt: new Date().toISOString() };
 }
 
 /** Accept anything that looks like our data; drop malformed entries instead of crashing. */
@@ -42,7 +51,9 @@ export function parseData(text: string | null | undefined): AppData | null {
       split: m.split && typeof m.split.save === 'number' ? m.split : base.split,
       checkins: Array.isArray(m.checkins) ? m.checkins : [],
     };
-    return { version: 1, entries, learn, money, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
+    const c = raw.code ?? {};
+    const code: CodeState = { scratch: typeof c.scratch === 'string' ? c.scratch : '', career: c.career && typeof c.career === 'object' ? c.career : {} };
+    return { version: 1, entries, learn, money, code, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
   } catch {
     return null;
   }
