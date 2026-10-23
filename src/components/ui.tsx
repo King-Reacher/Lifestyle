@@ -1,45 +1,29 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { getWebApp } from '../lib/telegram';
 
-export function Ring({ value, size = 84, label }: { value: number; size?: number; label?: ReactNode }) {
-  const stroke = 8;
-  const r = (size - stroke) / 2;
-  const c = 2 * Math.PI * r;
-  const v = Math.max(0, Math.min(1, value));
-  return (
-    <div className="ring" style={{ width: size, height: size }}>
-      <svg width={size} height={size} aria-hidden>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={stroke} />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke="var(--accent)"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={`${c * v} ${c}`}
-        />
-      </svg>
-      <div className="label">{label ?? `${Math.round(v * 100)}%`}</div>
-    </div>
-  );
-}
-
-export function Bar({ value, tone }: { value: number; tone?: 'good' }) {
-  return (
-    <div className={`bar ${tone ?? ''}`}>
-      <div style={{ width: `${Math.max(0, Math.min(1, value)) * 100}%` }} />
-    </div>
-  );
-}
-
+/** Bottom sheet. Inside Telegram, the header back button closes it. */
 export function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  useEffect(() => {
+    const wa = getWebApp();
+    if (!wa) return;
+    const handler = () => closeRef.current();
+    wa.BackButton.show();
+    wa.BackButton.onClick(handler);
+    return () => {
+      wa.BackButton.offClick(handler);
+      wa.BackButton.hide();
+    };
+  }, []);
+
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div className="sheet" role="dialog" aria-label={title} onClick={(e) => e.stopPropagation()}>
         <div className="row between">
           <h2 style={{ margin: 0 }}>{title}</h2>
-          <button className="icon-btn" onClick={onClose} aria-label="Close">
+          <button className="btn sm" onClick={onClose} aria-label="Close">
             ✕
           </button>
         </div>

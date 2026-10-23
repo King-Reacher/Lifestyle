@@ -1,46 +1,42 @@
-# DIOX LIFE OS
+# Ledger (working name)
 
-**Discipline. Direction. Decisions. Execution.**
+A private Telegram mini app: one ledger of your life, plus JAMB and Academy lessons, money discipline and streaks, all built on top of it. No AI, no server, and your data stays on your phone.
 
-A private, mobile-first life operating system: it plans your day, trains your judgment, tracks habits and money, and helps you recover when you fall behind. It installs to your Android home screen as a PWA and keeps all data on your device.
+## Build plan
 
-## What's in v0.1
+1. **Mini app shell, private access, ledger** ✅ *(this step)*
+2. JAMB lesson engine (Duolingo-style), starting with Maths from the foundations
+3. Physics, Chemistry, English and Biology tracks
+4. Money discipline with a strict savings streak
+5. Academy schools and "what should I do?" guides
+6. Mock exams and Post-UTME mode
 
-| Area | What it does |
-| --- | --- |
-| **Today** | Accountability score, "right now" task with focus timer, today's 3 outcomes, habit check-ins, *what needs to change*, day capacity, evening-review prompt. |
-| **Plan** | Places fixed-time items first, fills gaps by importance, and **never books more time than the day has**: anything that doesn't fit is listed so you can move it or make it smaller. Recovery plan (habits shrink to their minimum, "could do" tasks step aside). Unfinished work rolls forward automatically, and every rollover is counted. |
-| **Habits** | Clear action, time, minimum version. Done / minimum / missed, with a reason asked for each miss. Streak, best streak, 7- and 30-day consistency, 14-day history, recovery suggestions, "why you miss" patterns. |
-| **Coach** | Six situations (procrastinating, money, career, emotional, fallen behind, other), worked through as Understand → Clarify → Evaluate → Decide → Execute → Review. Each answer becomes a task with a deadline, and later asks "did it work?" Every answer comes with a principle you can learn and reuse. Rules-based; works offline. |
-| **Goals** | Education / Money / Career / Personal. Milestones, the reason behind the goal, deadlines, linked habits. Flags any goal that isn't tied to a daily action. |
-| **Money** | Income, essential, discretionary and savings transactions; savings goals using `Monthly = (Target − Saved) / Months left`; a reality check against income after essentials; "give this money a job" split each time income arrives. No bank connection. |
-| **Review** | Evening: wins, misses, lessons and energy; moves unfinished work forward and shows tomorrow's draft. Weekly: consistency, bottlenecks from your own data, one adjustment for the coming week. |
+## What step 1 does
 
-### Discipline modes
-- **Firm but realistic** (default): you can miss one day without losing your streak, but two missed days in a row reset it.
-- **Strict**: missing any day resets the streak, and a minimum-version day counts as half in the score.
-- **Adaptive**: like firm, and suggests the recovery plan after a low-energy day.
+- **Ledger:** log what you did, studied, earned, spent, decided, felt and learned, each tagged by area of life.
+- **Memory:** search everything you've logged. When you log a decision or a spend, it shows "Last time…" with similar past entries and how they turned out.
+- **Asks you questions:** "How did this decision turn out?" after 2 days, a check-in after a rough day, and an evening nudge if you haven't logged anything.
+- **Daily streak:** for logging at least one thing a day.
+- **Private:** only your Telegram account can open it. Data is saved on your device (Telegram DeviceStorage plus local storage). You can back it up by copying it into your Saved Messages and restore it by pasting it back.
 
-### Coach modes
-**Both** (default) gives a quick answer for everyday situations and asks questions first for major decisions. **Suggest** always answers straight away. **Ask** always walks through the questions.
+## Put it on Telegram
 
-## Run it
+1. **Create the bot.** In Telegram, open [@BotFather](https://t.me/BotFather) and send `/newbot`.
+2. **Host the app** (free, on GitHub Pages):
+   - Repo → Settings → Pages → Source: **GitHub Actions**.
+   - Repo → Settings → Secrets and variables → Actions → **Variables** → add `OWNER_ID` (you get the number in step 4).
+   - Merge to `main`. The workflow tests, builds and deploys the app to `https://<user>.github.io/<repo>/`.
+   - GitHub Pages on a private repo needs a paid GitHub plan. Netlify or Vercel work for free: build with `npm run build`, publish `dist/`, and set the `VITE_OWNER_ID` environment variable.
+3. **Connect the bot to the app.** In BotFather, run `/mybots` → your bot → Bot Settings → **Menu Button** → paste the app URL.
+4. **Lock it to you.** Open the bot and tap the menu button. The app shows your Telegram ID. Put that number into `OWNER_ID`, re-run the deploy, and from then on it only opens for you.
+
+## Develop
 
 ```bash
 npm install
-npm run dev        # local dev server
-npm test           # unit tests for streaks, planner, money, coach, scoring
-npm run build      # production build in dist/
+npm run dev     # opens in the browser on localhost, where the Telegram check is skipped
+npm test
+npm run build
 ```
 
-Deploy `dist/` to any static host (Netlify, Vercel, GitHub Pages, Cloudflare Pages). Then open it in Chrome on Android and choose **Add to Home screen**.
-
-## Privacy & limits
-- All data lives in this browser's local storage. Use **Settings → Export backup** regularly, because clearing your browser data erases it.
-- Reminders only fire while the app is open or was used recently. Browsers don't let web apps run reliably in the background.
-
-## Next
-1. Supabase sign-in and sync, so data is backed up across devices.
-2. An optional AI coach for open-ended decisions and reviews, used only when you turn it on.
-3. Server-sent push reminders.
-4. Progress charts.
+To rename the app, change `APP_NAME` in `src/config.ts` and the `<title>` in `index.html`.
