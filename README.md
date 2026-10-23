@@ -6,10 +6,12 @@ A private Telegram mini app: one ledger of your life, plus JAMB and Academy less
 
 1. **Mini app shell, private access, ledger** ✅
 2. **JAMB lesson engine (Duolingo-style), starting with Maths from the foundations** ✅
-3. Physics, Chemistry, English and Biology tracks
-4. Money discipline with a strict savings streak
-5. Academy schools and "what should I do?" guides
-6. Mock exams and Post-UTME mode
+3. **Physics, Chemistry, English and Biology tracks** ✅
+4. **Money discipline with a strict savings streak** ✅
+5. **Academy schools and "what should I do?" guides** ✅
+6. **Mock exams and Post-UTME mode** ✅
+
+Every subject has its foundation units built. Each course lists its next units on its own path; those are the content to add over time.
 
 ## What step 1 does
 
@@ -33,6 +35,31 @@ A private Telegram mini app: one ledger of your life, plus JAMB and Academy less
   - *Speed maths:* × 5/25/50, × 11, squares ending in 5, estimate and eliminate.
 - **Generated numbers:** most questions are generated, so every replay has new numbers. Tests check 200 versions of every lesson, confirming each question is well formed and accepts its own answer.
 - **Cast:** Mei (Maths, China), Prof. Greta (science, Germany), Maddie (English, USA), Priya (Biology, India), Mama Ada, Tunde, Zara and Blaze.
+
+## Steps 3 to 6
+
+- **Subjects:**
+  - Physics and Chemistry with Prof. Greta: units, vectors, motion, equations of motion, density and pressure, Newton's laws, matter, atomic structure, the periodic table, valency and formulas, the mole. Electron configurations and molar masses are computed in code, not typed by hand.
+  - English with Maddie: parts of speech, subject-verb agreement, tenses, question tags, synonyms and antonyms, spelling.
+  - Biology with Priya: living things, the cell, levels of organisation, classification, nutrition and food tests, food chains.
+- **Academy:** Schools 1, 2, 3, 4, 6, 9 and 12, in the same lesson format.
+- **Exam hall:**
+  - Quick mock: 10 per subject in 20 minutes.
+  - Full JAMB simulation: English 60, others 40, 2 hours, out of 400.
+  - Post-UTME practice.
+  - English is compulsory; you pick three other subjects.
+  - Timed, with a question grid to jump around. Results come per subject, with explanations for every miss.
+  - Misses go into spaced review, and the result is logged in the ledger.
+  - Hand-written banks (English, Biology) never repeat a question in one exam, so a full English paper is shorter until more English lessons exist.
+- **Money (Mama Ada, strict):**
+  - Log income and it splits into needs, savings and fun (50/30/20 by default, at least 20% saved). It then offers to save the savings share into goals, nearest deadline first.
+  - Wants wait 48 hours and show how many days they delay your goal. You can only buy one if it fits this month's fun money.
+  - An unplanned want breaks the money streak.
+  - Tracks how much you didn't waste.
+- **Guides ("What should I do?"):** procrastination, spending, stuck on a topic, big decisions, emotions, falling behind, anything else.
+  - The character asks Understand / Clarify / Evaluate questions, then gives an action, the reason and a principle.
+  - It also shows similar moments from your ledger.
+  - Saving the decision means you'll be asked how it turned out.
 
 ## Put it on Telegram
 

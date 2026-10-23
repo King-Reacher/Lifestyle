@@ -8,21 +8,12 @@ import { greeting, streakLine } from '../lib/lines';
 import { DAILY_GOAL, nextLesson } from '../learn/engine';
 import { COURSES } from '../learn/courses';
 import { loggingStreak, prompts, summarize, TYPES, type Entry, type EntryType, type Prompt } from '../lib/ledger';
+import { focusGoal, monthSummary, moneyStreak, naira, remaining } from '../lib/money';
 import { useStore } from '../lib/store';
 
 const QUICK: EntryType[] = ['study', 'did', 'money-out', 'money-in', 'decision', 'feeling', 'learned', 'note'];
 
-const JOURNEY = [
-  { icon: '📒', label: 'Your ledger', done: true },
-  { icon: '➗', label: 'JAMB Maths foundations', done: true },
-  { icon: '⚛️', label: 'Physics · Chemistry' },
-  { icon: '🧬', label: 'English · Biology' },
-  { icon: '💰', label: 'Money discipline' },
-  { icon: '🧠', label: 'Academy schools' },
-  { icon: '🏆', label: 'Mock exams · Post-UTME' },
-];
-
-export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
+export function Home({ name, onLearn, onGuide, onMoney }: { name: string; onLearn: () => void; onGuide: () => void; onMoney: () => void }) {
   const { data } = useStore();
   const date = today();
   const hour = new Date().getHours();
@@ -37,6 +28,9 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
   const nextUp = COURSES.map(({ course }) => ({ course, lesson: nextLesson(course, data.learn) })).find((x) => x.lesson);
   const next = nextUp?.lesson;
   const week = Array.from({ length: 7 }, (_, i) => addDays(date, i - 6));
+  const month = monthSummary(data.entries, data.money, date);
+  const goal = focusGoal(data.money.goals);
+  const mStreak = moneyStreak(data.entries, data.money, date);
 
   const answer = (p: Prompt) => {
     if (p.kind === 'outcome') setForm({ entry: p.entry });
@@ -134,22 +128,23 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
       </div>
 
       <div className="card">
-        <div className="row between">
-          <h2 style={{ margin: 0 }}>Your journey</h2>
-          <span className="eyebrow gold">Step 2 of 7</span>
-        </div>
-        <p className="small muted" style={{ margin: '4px 0 14px' }}>
-          Each stop unlocks as it's built. Lessons start from the very foundations.
-        </p>
-        <div className="path">
-          {JOURNEY.map((j) => (
-            <div key={j.label} className={`node ${j.done ? 'done' : ''}`}>
-              {j.done ? j.icon : '🔒'}
-              <span className="label">{j.label}</span>
-            </div>
-          ))}
-        </div>
+        <Say who="zara" text="Facing a choice, a temptation or a bad day? Let's think it through." size={64}>
+          <button className="btn primary sm" onClick={onGuide}>
+            What should I do?
+          </button>
+        </Say>
       </div>
+
+      <button className="card money-card" onClick={onMoney}>
+        <div className="row between">
+          <h2 style={{ margin: 0 }}>💰 Money</h2>
+          <span className="pill fire">🔥 {mStreak}</span>
+        </div>
+        <div className="small" style={{ fontWeight: 700, marginTop: 6, textAlign: 'left' }}>
+          {goal ? `${goal.title}: ${naira(remaining(goal))} to go` : 'No savings goal yet. Set one.'}
+          {' · '}Fun money left: {naira(Math.max(0, month.funLeft))}
+        </div>
+      </button>
 
       <button className="fab" onClick={() => setForm({})} aria-label="Log something">
         +

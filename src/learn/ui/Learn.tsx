@@ -141,7 +141,7 @@ function CoursePath({ course, onStart }: { course: Course; onStart: (c: Course, 
               const st = status.get(l.id)!;
               const offset = [0, -1, -1.6, -1, 0, 1, 1.6, 1][li % 8];
               return (
-                <div key={l.id} className="lesson-stop" style={{ transform: `translateX(${offset * 38}px)` }}>
+                <div key={l.id} className={`lesson-stop ${st}`} style={{ transform: `translateX(${offset * 38}px)` }}>
                   {st === 'current' && <div className="start-bubble">START</div>}
                   <button
                     className={`lesson-node ${st}`}

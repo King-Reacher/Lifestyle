@@ -1,4 +1,5 @@
 import { emptyLearn, type LearnState } from '../learn/engine';
+import { emptyMoney, type MoneyState } from './money';
 import type { Entry } from './ledger';
 import { getWebApp } from './telegram';
 
@@ -8,11 +9,12 @@ export interface AppData {
   version: 1;
   entries: Entry[];
   learn: LearnState;
+  money: MoneyState;
   createdAt: string;
 }
 
 export function emptyData(): AppData {
-  return { version: 1, entries: [], learn: emptyLearn(), createdAt: new Date().toISOString() };
+  return { version: 1, entries: [], learn: emptyLearn(), money: emptyMoney(), createdAt: new Date().toISOString() };
 }
 
 /** Accept anything that looks like our data; drop malformed entries instead of crashing. */
@@ -31,7 +33,16 @@ export function parseData(text: string | null | undefined): AppData | null {
       review: Array.isArray(l.review) ? l.review.filter((r: { ex?: unknown; due?: unknown }) => r && r.ex && typeof r.due === 'string') : [],
       exams: Array.isArray(l.exams) ? l.exams : [],
     };
-    return { version: 1, entries, learn, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
+    const m = raw.money ?? {};
+    const base = emptyMoney();
+    const money: MoneyState = {
+      goals: Array.isArray(m.goals) ? m.goals : [],
+      wants: Array.isArray(m.wants) ? m.wants : [],
+      contributions: Array.isArray(m.contributions) ? m.contributions : [],
+      split: m.split && typeof m.split.save === 'number' ? m.split : base.split,
+      checkins: Array.isArray(m.checkins) ? m.checkins : [],
+    };
+    return { version: 1, entries, learn, money, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
   } catch {
     return null;
   }
@@ -67,7 +78,7 @@ export async function loadData(): Promise<AppData> {
   const fromDevice = parseData(await readDevice());
   const fromLocal = parseData(readLocal());
   // Prefer whichever copy holds more; they only differ if one store was wiped.
-  const size = (d: AppData) => d.entries.length + Object.keys(d.learn.lessons).length;
+  const size = (d: AppData) => d.entries.length + Object.keys(d.learn.lessons).length + d.money.goals.length + d.money.wants.length;
   const best = [fromDevice, fromLocal].filter((d): d is AppData => !!d).sort((a, b) => size(b) - size(a))[0];
   return best ?? emptyData();
 }

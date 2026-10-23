@@ -52,6 +52,8 @@ export interface Entry {
   minutes?: number;
   /** 1 (awful) to 5 (great) */
   mood?: number;
+  /** For spending: a need, a planned want, or an unplanned want that breaks the money streak. */
+  spend?: 'need' | 'planned' | 'unplanned';
   /** For decisions: how it turned out, filled in later. */
   outcome?: string;
   outcomeAt?: string;
