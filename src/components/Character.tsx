@@ -1,12 +1,16 @@
 import { useEffect, useId, useState, type ReactElement, type ReactNode } from 'react';
 
-export type Who = 'ada' | 'tunde' | 'zara' | 'blaze';
+export type Who = 'ada' | 'tunde' | 'zara' | 'blaze' | 'greta' | 'mei' | 'maddie' | 'priya';
 
 export const CAST: Record<Who, { name: string; role: string; color: string }> = {
   ada: { name: 'Mama Ada', role: 'Wisdom & money', color: '#8b5cf6' },
   tunde: { name: 'Tunde', role: 'Study buddy', color: '#14b8a6' },
   zara: { name: 'Zara', role: 'Ledger keeper', color: '#ff7a45' },
   blaze: { name: 'Blaze', role: 'Streak keeper', color: '#ff9f1c' },
+  greta: { name: 'Prof. Greta', role: 'Science · Germany', color: '#60a5fa' },
+  mei: { name: 'Mei', role: 'Maths · China', color: '#f43f5e' },
+  maddie: { name: 'Maddie', role: 'English · USA', color: '#38bdf8' },
+  priya: { name: 'Priya', role: 'Biology · India', color: '#10b981' },
 };
 
 type Mood = 'idle' | 'talking' | 'cheer';
@@ -177,7 +181,146 @@ function Blaze({ id }: { id: string }) {
   );
 }
 
-const ART: Record<Who, (p: { id: string }) => ReactElement> = { ada: Ada, tunde: Tunde, zara: Zara, blaze: Blaze };
+function Greta(_: { id: string }) {
+  const skin = '#f3d2b8';
+  return (
+    <g className="bob">
+      {/* lab coat over a blue blouse */}
+      <path d="M14 120 C18 92 38 82 60 82 C82 82 102 92 106 120 Z" fill="#f8fafc" />
+      <path d="M48 84 L60 104 L72 84 Z" fill="#3b82f6" />
+      <path d="M48 84 L40 120 M72 84 L80 120" stroke="#cbd5e1" strokeWidth="2" />
+      <rect x="76" y="100" width="12" height="8" rx="2" fill="#cbd5e1" />
+      <path d="M79 98 V104" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" />
+      <rect x="51" y="70" width="18" height="16" rx="6" fill="#e6bfa2" />
+      {/* silver hair with a bun */}
+      <circle cx="60" cy="22" r="11" fill="#cbd5e1" />
+      <ellipse cx="60" cy="56" rx="24" ry="26" fill="#cbd5e1" />
+      <ellipse cx="60" cy="60" rx="21" ry="23" fill={skin} />
+      <path d="M38 52 C40 36 50 32 60 32 C72 32 82 38 82 52 C76 42 66 40 60 42 C52 40 44 44 38 52 Z" fill="#e2e8f0" />
+      <g className="eyes">
+        <circle cx="51" cy="60" r="2.4" fill="#1e3a8a" />
+        <circle cx="69" cy="60" r="2.4" fill="#1e3a8a" />
+      </g>
+      <rect x="43" y="54" width="15" height="11" rx="4" stroke="#334155" strokeWidth="2" fill="#fff" fillOpacity=".1" />
+      <rect x="62" y="54" width="15" height="11" rx="4" stroke="#334155" strokeWidth="2" fill="#fff" fillOpacity=".1" />
+      <path d="M58 59 H62" stroke="#334155" strokeWidth="2" />
+      <path d="M45 50 Q51 47 57 50 M63 50 Q69 47 75 50" stroke="#94a3b8" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <circle cx="46" cy="70" r="3.5" fill="#f9a8a8" opacity=".45" />
+      <circle cx="74" cy="70" r="3.5" fill="#f9a8a8" opacity=".45" />
+      <Mouth
+        closed={<path d="M53 74 Q60 79 67 74" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" />}
+        open={<ellipse cx="60" cy="75" rx="4.6" ry="4" fill="#7f1d1d" />}
+      />
+    </g>
+  );
+}
+
+function Mei(_: { id: string }) {
+  const skin = '#f1c9a5';
+  return (
+    <g className="bob">
+      <path d="M16 120 C20 94 38 84 60 84 C82 84 100 94 104 120 Z" fill="#f43f5e" />
+      <path d="M52 84 L60 94 L68 84" stroke="#fde68a" strokeWidth="3" fill="none" strokeLinejoin="round" />
+      <rect x="51" y="72" width="18" height="14" rx="6" fill="#e0b18c" />
+      {/* black bob with bangs */}
+      <path d="M33 62 C30 30 46 22 60 22 C76 22 90 30 87 62 L87 80 C84 84 80 84 78 80 L78 58 L42 58 L42 80 C40 84 36 84 33 80 Z" fill="#111827" />
+      <ellipse cx="60" cy="60" rx="21" ry="23" fill={skin} />
+      <path d="M39 52 C40 36 50 32 60 32 C70 32 80 36 81 52 C76 46 70 48 66 44 C62 48 56 48 52 44 C48 48 42 46 39 52 Z" fill="#111827" />
+      <g className="eyes">
+        <ellipse cx="51" cy="61" rx="3.6" ry="3" fill={INK} />
+        <ellipse cx="69" cy="61" rx="3.6" ry="3" fill={INK} />
+        <circle cx="52" cy="60" r="0.9" fill="#fff" />
+        <circle cx="70" cy="60" r="0.9" fill="#fff" />
+      </g>
+      <circle cx="45" cy="69" r="3.6" fill="#fb7185" opacity=".35" />
+      <circle cx="75" cy="69" r="3.6" fill="#fb7185" opacity=".35" />
+      <Mouth
+        closed={<path d="M54 73 Q60 78 66 73" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" />}
+        open={<path d="M53 72 Q60 82 67 72 Z" fill="#881337" />}
+      />
+    </g>
+  );
+}
+
+function Maddie(_: { id: string }) {
+  const skin = '#f7d7c4';
+  return (
+    <g className="bob">
+      {/* varsity jacket */}
+      <path d="M14 120 C18 92 38 82 60 82 C82 82 102 92 106 120 Z" fill="#1e3a8a" />
+      <path d="M50 84 L60 98 L70 84" fill="#f8fafc" />
+      <path d="M18 112 C22 98 30 92 38 90 M102 112 C98 98 90 92 82 90" stroke="#ef4444" strokeWidth="4" fill="none" />
+      <rect x="51" y="70" width="18" height="16" rx="6" fill="#ecc3ab" />
+      {/* blonde high ponytail */}
+      <path d="M78 26 C96 24 102 44 94 64 C90 52 86 40 76 34 Z" fill="#facc15" />
+      <ellipse cx="60" cy="56" rx="24" ry="26" fill="#facc15" />
+      <ellipse cx="60" cy="60" rx="21" ry="23" fill={skin} />
+      <path d="M38 54 C38 36 50 30 62 30 C74 30 84 38 82 52 C74 42 60 38 46 44 Z" fill="#fde047" />
+      <circle cx="76" cy="30" r="3" fill="#ef4444" />
+      <g className="eyes">
+        <ellipse cx="51" cy="61" rx="4.4" ry="5" fill="#fff" />
+        <ellipse cx="69" cy="61" rx="4.4" ry="5" fill="#fff" />
+        <circle cx="51.5" cy="62" r="2.6" fill="#2563eb" />
+        <circle cx="69.5" cy="62" r="2.6" fill="#2563eb" />
+        <circle cx="51.5" cy="62" r="1.2" fill={INK} />
+        <circle cx="69.5" cy="62" r="1.2" fill={INK} />
+      </g>
+      <path d="M53 66 L54 66 M66 66 L67 66 M58 67 L59 67" stroke="#d97757" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="45" cy="70" r="3.6" fill="#fb7185" opacity=".4" />
+      <circle cx="75" cy="70" r="3.6" fill="#fb7185" opacity=".4" />
+      <Mouth
+        closed={<path d="M52 74 Q60 81 68 74" stroke={INK} strokeWidth="2.6" fill="none" strokeLinecap="round" />}
+        open={
+          <>
+            <path d="M51 73 Q60 86 69 73 Z" fill="#7f1d1d" />
+            <path d="M54 74 H66" stroke="#fff" strokeWidth="2" />
+          </>
+        }
+      />
+    </g>
+  );
+}
+
+function Priya(_: { id: string }) {
+  const skin = '#b9785a';
+  return (
+    <g className="bob">
+      <path d="M16 120 C20 94 38 84 60 84 C82 84 100 94 104 120 Z" fill="#059669" />
+      <path d="M44 86 C50 96 70 96 76 86" stroke="#fbbf24" strokeWidth="3" fill="none" />
+      <rect x="51" y="72" width="18" height="14" rx="6" fill="#a2664a" />
+      {/* long dark hair with a side part */}
+      <path d="M34 60 C30 28 48 20 62 20 C78 20 90 30 86 60 L90 104 C84 108 78 104 76 98 L76 58 L44 58 L44 98 C42 104 36 108 30 104 Z" fill="#1c1917" />
+      <ellipse cx="60" cy="60" rx="21" ry="23" fill={skin} />
+      <path d="M39 54 C42 38 52 32 66 33 C74 34 80 40 81 50 C72 44 62 38 52 42 C46 44 42 48 39 54 Z" fill="#1c1917" />
+      <circle cx="39" cy="70" r="2.6" fill="#fbbf24" />
+      <circle cx="81" cy="70" r="2.6" fill="#fbbf24" />
+      <g className="eyes">
+        <ellipse cx="51" cy="61" rx="4.6" ry="5" fill="#fff" />
+        <ellipse cx="69" cy="61" rx="4.6" ry="5" fill="#fff" />
+        <circle cx="51.5" cy="62" r="2.8" fill="#3f2a1d" />
+        <circle cx="69.5" cy="62" r="2.8" fill="#3f2a1d" />
+        <circle cx="52.5" cy="61" r="0.9" fill="#fff" />
+        <circle cx="70.5" cy="61" r="0.9" fill="#fff" />
+      </g>
+      <path d="M45 54 Q51 51 56 54 M64 54 Q69 51 75 54" stroke="#1c1917" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <Mouth
+        closed={<path d="M53 73 Q60 79 67 73" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" />}
+        open={<ellipse cx="60" cy="74" rx="4.6" ry="4.2" fill="#6b1d1d" />}
+      />
+    </g>
+  );
+}
+
+const ART: Record<Who, (p: { id: string }) => ReactElement> = {
+  ada: Ada,
+  tunde: Tunde,
+  zara: Zara,
+  blaze: Blaze,
+  greta: Greta,
+  mei: Mei,
+  maddie: Maddie,
+  priya: Priya,
+};
 
 /**
  * A character saying something in a speech bubble. The text types itself out

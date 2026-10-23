@@ -7,14 +7,16 @@ import { loggingStreak } from './lib/ledger';
 import { loadData, saveData, type AppData } from './lib/storage';
 import { StoreContext, type Cheer, type Updater } from './lib/store';
 import { getWebApp, haptic } from './lib/telegram';
+import { Learn } from './learn/ui/Learn';
 import { Home } from './screens/Home';
 import { Ledger } from './screens/Ledger';
 import { You } from './screens/You';
 
-type Tab = 'home' | 'ledger' | 'you';
+type Tab = 'home' | 'learn' | 'ledger' | 'you';
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'home', label: 'Home', icon: '🏠' },
+  { id: 'learn', label: 'Learn', icon: '🎓' },
   { id: 'ledger', label: 'Ledger', icon: '📒' },
   { id: 'you', label: 'You', icon: '🔒' },
 ];
@@ -106,7 +108,8 @@ export function App() {
             🔥 {streak}
           </span>
         </header>
-        {tab === 'home' && <Home name={access.name} />}
+        {tab === 'home' && <Home name={access.name} onLearn={() => go('learn')} />}
+        {tab === 'learn' && <Learn />}
         {tab === 'ledger' && <Ledger />}
         {tab === 'you' && <You userId={access.userId} />}
       </div>

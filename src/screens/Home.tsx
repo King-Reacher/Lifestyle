@@ -5,6 +5,8 @@ import { EntryItem, formatAmount } from '../components/EntryItem';
 import { Empty } from '../components/ui';
 import { addDays, fromISODate, today } from '../lib/dates';
 import { greeting, streakLine } from '../lib/lines';
+import { DAILY_GOAL, nextLesson } from '../learn/engine';
+import { MATHS } from '../learn/maths';
 import { loggingStreak, prompts, summarize, TYPES, type Entry, type EntryType, type Prompt } from '../lib/ledger';
 import { useStore } from '../lib/store';
 
@@ -12,7 +14,7 @@ const QUICK: EntryType[] = ['study', 'did', 'money-out', 'money-in', 'decision',
 
 const JOURNEY = [
   { icon: '📒', label: 'Your ledger', done: true },
-  { icon: '➗', label: 'JAMB Maths — foundations' },
+  { icon: '➗', label: 'JAMB Maths — foundations', done: true },
   { icon: '⚛️', label: 'Physics · Chemistry' },
   { icon: '🧬', label: 'English · Biology' },
   { icon: '💰', label: 'Money discipline' },
@@ -20,7 +22,7 @@ const JOURNEY = [
   { icon: '🏆', label: 'Mock exams · Post-UTME' },
 ];
 
-export function Home({ name }: { name: string }) {
+export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
   const { data } = useStore();
   const date = today();
   const hour = new Date().getHours();
@@ -31,6 +33,7 @@ export function Home({ name }: { name: string }) {
   const todays = data.entries.filter((e) => e.date === date).sort((a, b) => b.at.localeCompare(a.at));
   const hello = greeting(name, hour, date);
   const loggedDays = new Set(data.entries.map((e) => e.date));
+  const next = nextLesson(MATHS, data.learn);
   const week = Array.from({ length: 7 }, (_, i) => addDays(date, i - 6));
 
   const answer = (p: Prompt) => {
@@ -62,6 +65,19 @@ export function Home({ name }: { name: string }) {
               {fromISODate(d).toLocaleDateString(undefined, { weekday: 'narrow' })}
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="card glow">
+        <div className="row">
+          <Character who="mei" size={64} />
+          <div className="grow">
+            <div className="eyebrow">Today’s lesson · {data.learn.xpByDay[date] ?? 0}/{DAILY_GOAL} XP</div>
+            <div style={{ fontWeight: 900, fontSize: 17, margin: '2px 0 8px' }}>{next ? `Maths: ${next.title}` : 'Maths: all lessons done — review time'}</div>
+            <button className="btn go sm" onClick={onLearn}>
+              {next ? 'Start lesson' : 'Open Learn'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -118,7 +134,7 @@ export function Home({ name }: { name: string }) {
       <div className="card">
         <div className="row between">
           <h2 style={{ margin: 0 }}>Your journey</h2>
-          <span className="eyebrow gold">Step 1 of 7</span>
+          <span className="eyebrow gold">Step 2 of 7</span>
         </div>
         <p className="small muted" style={{ margin: '4px 0 14px' }}>
           Each stop unlocks as it’s built. Lessons start from the very foundations.

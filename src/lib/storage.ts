@@ -1,3 +1,4 @@
+import { emptyLearn, type LearnState } from '../learn/engine';
 import type { Entry } from './ledger';
 import { getWebApp } from './telegram';
 
@@ -6,11 +7,12 @@ const KEY = 'ledger:v1';
 export interface AppData {
   version: 1;
   entries: Entry[];
+  learn: LearnState;
   createdAt: string;
 }
 
 export function emptyData(): AppData {
-  return { version: 1, entries: [], createdAt: new Date().toISOString() };
+  return { version: 1, entries: [], learn: emptyLearn(), createdAt: new Date().toISOString() };
 }
 
 /** Accept anything that looks like our data; drop malformed entries instead of crashing. */
@@ -22,7 +24,13 @@ export function parseData(text: string | null | undefined): AppData | null {
     const entries = (raw.entries as Entry[]).filter(
       (e) => e && typeof e.id === 'string' && typeof e.at === 'string' && typeof e.date === 'string' && typeof e.text === 'string',
     );
-    return { version: 1, entries, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
+    const l = raw.learn ?? {};
+    const learn: LearnState = {
+      lessons: l.lessons && typeof l.lessons === 'object' ? l.lessons : {},
+      xpByDay: l.xpByDay && typeof l.xpByDay === 'object' ? l.xpByDay : {},
+      review: Array.isArray(l.review) ? l.review.filter((r: { ex?: unknown; due?: unknown }) => r && r.ex && typeof r.due === 'string') : [],
+    };
+    return { version: 1, entries, learn, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
   } catch {
     return null;
   }
@@ -58,9 +66,8 @@ export async function loadData(): Promise<AppData> {
   const fromDevice = parseData(await readDevice());
   const fromLocal = parseData(readLocal());
   // Prefer whichever copy holds more; they only differ if one store was wiped.
-  const best = [fromDevice, fromLocal]
-    .filter((d): d is AppData => !!d)
-    .sort((a, b) => b.entries.length - a.entries.length)[0];
+  const size = (d: AppData) => d.entries.length + Object.keys(d.learn.lessons).length;
+  const best = [fromDevice, fromLocal].filter((d): d is AppData => !!d).sort((a, b) => size(b) - size(a))[0];
   return best ?? emptyData();
 }
 
