@@ -4,20 +4,21 @@ import { checkInput } from '../engine';
 import type { ChoiceEx, Exercise, InputEx, MatchEx, OrderEx, TrueFalseEx } from '../types';
 import { seeded, shuffle } from '../util';
 
-/** Reports whether an answer is ready to check, and whether it's right. */
-export type OnChange = (ready: boolean, correct: boolean) => void;
+/** Reports whether an answer is ready, whether it's right, and the raw answer so exam mode can restore it. */
+export type OnChange = (ready: boolean, correct: boolean, raw: unknown) => void;
 
 interface ViewProps<E> {
   ex: E;
   locked: boolean;
   onChange: OnChange;
+  initial?: unknown;
 }
 
 /** A stable seed per exercise, so shuffles don't jump around between renders. */
 const seedOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 
-function ChoiceView({ ex, locked, onChange }: ViewProps<ChoiceEx>) {
-  const [sel, setSel] = useState<number | null>(null);
+function ChoiceView({ ex, locked, onChange, initial }: ViewProps<ChoiceEx>) {
+  const [sel, setSel] = useState<number | null>(typeof initial === 'number' ? initial : null);
   return (
     <div className="options">
       {ex.options.map((o, i) => (
@@ -28,7 +29,7 @@ function ChoiceView({ ex, locked, onChange }: ViewProps<ChoiceEx>) {
           onClick={() => {
             haptic();
             setSel(i);
-            onChange(true, i === ex.answer);
+            onChange(true, i === ex.answer, i);
           }}
         >
           <span className="key">{i + 1}</span>
@@ -39,8 +40,8 @@ function ChoiceView({ ex, locked, onChange }: ViewProps<ChoiceEx>) {
   );
 }
 
-function TrueFalseView({ ex, locked, onChange }: ViewProps<TrueFalseEx>) {
-  const [sel, setSel] = useState<boolean | null>(null);
+function TrueFalseView({ ex, locked, onChange, initial }: ViewProps<TrueFalseEx>) {
+  const [sel, setSel] = useState<boolean | null>(typeof initial === 'boolean' ? initial : null);
   return (
     <div className="tf">
       {[true, false].map((v) => (
@@ -51,7 +52,7 @@ function TrueFalseView({ ex, locked, onChange }: ViewProps<TrueFalseEx>) {
           onClick={() => {
             haptic();
             setSel(v);
-            onChange(true, v === ex.answer);
+            onChange(true, v === ex.answer, v);
           }}
         >
           {v ? '✓ True' : '✕ False'}
@@ -63,8 +64,8 @@ function TrueFalseView({ ex, locked, onChange }: ViewProps<TrueFalseEx>) {
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '−', '0', '.', '/', '␣', '⌫'];
 
-function InputView({ ex, locked, onChange }: ViewProps<InputEx>) {
-  const [value, setValue] = useState('');
+function InputView({ ex, locked, onChange, initial }: ViewProps<InputEx>) {
+  const [value, setValue] = useState(typeof initial === 'string' ? initial : '');
 
   const press = (k: string) => {
     if (locked) return;
@@ -72,7 +73,7 @@ function InputView({ ex, locked, onChange }: ViewProps<InputEx>) {
     const v = value;
     const next = k === '⌫' ? v.slice(0, -1) : k === '␣' ? (v && !v.endsWith(' ') ? `${v} ` : v) : v.length < 14 ? v + k : v;
     setValue(next);
-    onChange(next.trim().length > 0, checkInput(ex, next));
+    onChange(next.trim().length > 0, checkInput(ex, next), next);
   };
 
   // Physical keyboards (desktop Telegram) type straight in.
@@ -123,7 +124,7 @@ function OrderView({ ex, locked, onChange }: ViewProps<OrderEx>) {
   const update = (next: number[]) => {
     haptic();
     setPicked(next);
-    onChange(next.length === ex.tiles.length, next.every((i, pos) => ex.tiles[i] === ex.tiles[pos]));
+    onChange(next.length === ex.tiles.length, next.every((i, pos) => ex.tiles[i] === ex.tiles[pos]), next);
   };
 
   return (
@@ -197,20 +198,22 @@ export function ExerciseView({
   onChange,
   onPenalty,
   onSolved,
+  initial,
 }: {
   ex: Exercise;
   locked: boolean;
   onChange: OnChange;
   onPenalty: () => void;
   onSolved: () => void;
+  initial?: unknown;
 }) {
   switch (ex.kind) {
     case 'choice':
-      return <ChoiceView ex={ex} locked={locked} onChange={onChange} />;
+      return <ChoiceView ex={ex} locked={locked} onChange={onChange} initial={initial} />;
     case 'truefalse':
-      return <TrueFalseView ex={ex} locked={locked} onChange={onChange} />;
+      return <TrueFalseView ex={ex} locked={locked} onChange={onChange} initial={initial} />;
     case 'input':
-      return <InputView ex={ex} locked={locked} onChange={onChange} />;
+      return <InputView ex={ex} locked={locked} onChange={onChange} initial={initial} />;
     case 'order':
       return <OrderView ex={ex} locked={locked} onChange={onChange} />;
     case 'match':

@@ -29,6 +29,7 @@ export function parseData(text: string | null | undefined): AppData | null {
       lessons: l.lessons && typeof l.lessons === 'object' ? l.lessons : {},
       xpByDay: l.xpByDay && typeof l.xpByDay === 'object' ? l.xpByDay : {},
       review: Array.isArray(l.review) ? l.review.filter((r: { ex?: unknown; due?: unknown }) => r && r.ex && typeof r.due === 'string') : [],
+      exams: Array.isArray(l.exams) ? l.exams : [],
     };
     return { version: 1, entries, learn, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
   } catch {

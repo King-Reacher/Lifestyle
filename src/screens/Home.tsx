@@ -6,7 +6,7 @@ import { Empty } from '../components/ui';
 import { addDays, fromISODate, today } from '../lib/dates';
 import { greeting, streakLine } from '../lib/lines';
 import { DAILY_GOAL, nextLesson } from '../learn/engine';
-import { MATHS } from '../learn/maths';
+import { COURSES } from '../learn/courses';
 import { loggingStreak, prompts, summarize, TYPES, type Entry, type EntryType, type Prompt } from '../lib/ledger';
 import { useStore } from '../lib/store';
 
@@ -33,7 +33,9 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
   const todays = data.entries.filter((e) => e.date === date).sort((a, b) => b.at.localeCompare(a.at));
   const hello = greeting(name, hour, date);
   const loggedDays = new Set(data.entries.map((e) => e.date));
-  const next = nextLesson(MATHS, data.learn);
+  // Suggest the next lesson in the first subject that still has one, so every subject keeps moving.
+  const nextUp = COURSES.map(({ course }) => ({ course, lesson: nextLesson(course, data.learn) })).find((x) => x.lesson);
+  const next = nextUp?.lesson;
   const week = Array.from({ length: 7 }, (_, i) => addDays(date, i - 6));
 
   const answer = (p: Prompt) => {
@@ -73,7 +75,7 @@ export function Home({ name, onLearn }: { name: string; onLearn: () => void }) {
           <Character who="mei" size={64} />
           <div className="grow">
             <div className="eyebrow">Today's lesson · {data.learn.xpByDay[date] ?? 0}/{DAILY_GOAL} XP</div>
-            <div style={{ fontWeight: 900, fontSize: 17, margin: '2px 0 8px' }}>{next ? `Maths: ${next.title}` : 'Maths: all lessons done, time to review'}</div>
+            <div style={{ fontWeight: 900, fontSize: 17, margin: '2px 0 8px' }}>{nextUp && next ? `${nextUp.course.title}: ${next.title}` : 'All lessons done. Time for a mock exam'}</div>
             <button className="btn go sm" onClick={onLearn}>
               {next ? 'Start lesson' : 'Open Learn'}
             </button>

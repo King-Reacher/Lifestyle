@@ -21,57 +21,63 @@ import {
   studyStreak,
   xpFor,
 } from './engine';
-import { allLessons, MATHS } from './maths';
+import { config, groupPeriod, molarMass } from './courses/chemistry';
+import { allLessons, CHEMISTRY, COURSES, ENGLISH, MATHS, PHYSICS } from './courses';
+import { buildExam, drawQuestions, scoreExam } from './exam';
 import type { Exercise, InputEx } from './types';
 import { gcd, parseRational } from './util';
 
 const DAY = '2026-10-23';
 
-describe('maths content', () => {
-  const lessons = allLessons(MATHS);
+describe('course content', () => {
+  const everyLesson = COURSES.flatMap(({ course }) => allLessons(course));
 
-  it('has unique lesson ids and something to teach in every lesson', () => {
-    expect(new Set(lessons.map((l) => l.id)).size).toBe(lessons.length);
-    for (const l of lessons) {
+  it('has unique lesson ids across all courses and something to teach in every lesson', () => {
+    expect(new Set(everyLesson.map((l) => l.id)).size).toBe(everyLesson.length);
+    for (const l of everyLesson) {
       expect(l.teach.length, l.id).toBeGreaterThan(0);
-      expect(l.exercises.length, l.id).toBeGreaterThanOrEqual(5);
+      expect(l.exercises.length, l.id).toBeGreaterThanOrEqual(3);
     }
   });
 
   // Generators make different numbers every time, so check many seeds.
-  it('every exercise is well-formed and its own answer is accepted (200 seeds)', () => {
-    for (const lesson of lessons) {
-      for (let seed = 1; seed <= 200; seed++) {
-        const exercises = buildLesson(lesson, seed).filter((i): i is Exercise => !isTeach(i));
-        for (const ex of exercises) {
-          const where = `${lesson.id} ${ex.id} seed ${seed}: ${ex.prompt}`;
-          expect(ex.explain.length, where).toBeGreaterThan(5);
-          if (ex.kind === 'choice') {
-            expect(ex.options.length, where).toBeGreaterThanOrEqual(3);
-            expect(new Set(ex.options).size, where).toBe(ex.options.length);
-            expect(ex.answer, where).toBeGreaterThanOrEqual(0);
-            expect(ex.answer, where).toBeLessThan(ex.options.length);
-          }
-          if (ex.kind === 'input') {
-            const shown = correctAnswer(ex).replace(ex.prefix ?? '', '').replace(ex.suffix ?? '', '');
-            expect(checkInput(ex, shown), where).toBe(true);
-            if (ex.rational) {
-              expect(Number.isInteger(ex.rational[0]) && Number.isInteger(ex.rational[1]), where).toBe(true);
-              if (ex.lowestTerms) expect(gcd(ex.rational[0], ex.rational[1]), where).toBe(1);
+  for (const { course } of COURSES) {
+    it(`${course.title}: every exercise is well-formed and its own answer is accepted (200 seeds)`, () => {
+      for (const lesson of allLessons(course)) {
+        for (let seed = 1; seed <= 200; seed++) {
+          const exercises = buildLesson(lesson, seed).filter((i): i is Exercise => !isTeach(i));
+          for (const ex of exercises) {
+            const where = `${lesson.id} ${ex.id} seed ${seed}: ${ex.prompt}`;
+            expect(ex.explain.length, where).toBeGreaterThan(5);
+            expect(ex.prompt, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
+            expect(ex.explain, where).not.toMatch(/\bNaN\b|undefined|Infinity/);
+            if (ex.kind === 'choice') {
+              expect(ex.options.length, where).toBeGreaterThanOrEqual(3);
+              expect(new Set(ex.options).size, where).toBe(ex.options.length);
+              expect(ex.answer, where).toBeGreaterThanOrEqual(0);
+              expect(ex.answer, where).toBeLessThan(ex.options.length);
             }
+            if (ex.kind === 'input') {
+              const shown = correctAnswer(ex).replace(ex.prefix ?? '', '').replace(ex.suffix ?? '', '');
+              expect(checkInput(ex, shown), where).toBe(true);
+              if (ex.rational) {
+                expect(Number.isInteger(ex.rational[0]) && Number.isInteger(ex.rational[1]), where).toBe(true);
+                if (ex.lowestTerms) expect(gcd(ex.rational[0], ex.rational[1]), where).toBe(1);
+              }
+            }
+            if (ex.kind === 'match') {
+              expect(new Set(ex.pairs.map((p) => p[0])).size, where).toBe(ex.pairs.length);
+              expect(new Set(ex.pairs.map((p) => p[1])).size, where).toBe(ex.pairs.length);
+            }
+            if (ex.kind === 'order') expect(new Set(ex.tiles).size, where).toBe(ex.tiles.length);
           }
-          if (ex.kind === 'match') {
-            expect(new Set(ex.pairs.map((p) => p[0])).size, where).toBe(ex.pairs.length);
-            expect(new Set(ex.pairs.map((p) => p[1])).size, where).toBe(ex.pairs.length);
-          }
-          if (ex.kind === 'order') expect(new Set(ex.tiles).size, where).toBe(ex.tiles.length);
         }
       }
-    }
-  });
+    });
+  }
 
-  it('generated answers are mathematically right (spot checks)', () => {
-    const neg = lessons.find((l) => l.id === 'm1-neg')!;
+  it('generated maths answers are right (independent check)', () => {
+    const neg = allLessons(MATHS).find((l) => l.id === 'm1-neg')!;
     for (let seed = 1; seed <= 50; seed++) {
       for (const ex of buildLesson(neg, seed)) {
         if (ex.kind !== 'input') continue;
@@ -81,6 +87,58 @@ describe('maths content', () => {
         expect(String(value), ex.prompt).toBe(ex.answers![0]);
       }
     }
+  });
+});
+
+describe('chemistry facts', () => {
+  it('fills electron shells 2, 8, 8, 2 and sums to Z', () => {
+    expect(config(11)).toEqual([2, 8, 1]);
+    expect(config(17)).toEqual([2, 8, 7]);
+    expect(config(20)).toEqual([2, 8, 8, 2]);
+    for (let z = 1; z <= 20; z++) expect(config(z).reduce((a, b) => a + b, 0)).toBe(z);
+  });
+
+  it('places elements in the right group and period', () => {
+    expect(groupPeriod(11)).toEqual({ group: '1', period: 3 });
+    expect(groupPeriod(17)).toEqual({ group: '7', period: 3 });
+    expect(groupPeriod(2)).toEqual({ group: '0', period: 1 });
+    expect(groupPeriod(18)).toEqual({ group: '0', period: 3 });
+    expect(groupPeriod(20)).toEqual({ group: '2', period: 4 });
+  });
+
+  it('computes molar masses from atomic masses', () => {
+    expect(molarMass({ H: 2, O: 1 })).toBe(18);
+    expect(molarMass({ Na: 1, Cl: 1 })).toBe(58.5);
+    expect(molarMass({ Ca: 1, C: 1, O: 3 })).toBe(100);
+    expect(molarMass({ H: 2, S: 1, O: 4 })).toBe(98);
+  });
+});
+
+describe('mock exams', () => {
+  it('builds a quick mock with 10 questions per subject, all examable', () => {
+    const qs = buildExam([ENGLISH, MATHS, PHYSICS, CHEMISTRY], 'quick', 42);
+    for (const s of ['english', 'maths', 'physics', 'chemistry']) expect(qs.filter((q) => q.subject === s)).toHaveLength(10);
+    expect(qs.every((q) => ['choice', 'truefalse', 'input'].includes(q.ex.kind))).toBe(true);
+    expect(new Set(qs.map((q) => q.ex.id)).size).toBe(qs.length);
+  });
+
+  it('never repeats a hand-written question, even when the bank is smaller than asked', () => {
+    const english = drawQuestions(ENGLISH, 60, 7);
+    expect(english.length).toBeLessThanOrEqual(60);
+    expect(new Set(english.map((e) => e.prompt)).size).toBe(english.length);
+  });
+
+  it('fills a full JAMB maths paper with generated questions', () => {
+    expect(drawQuestions(MATHS, 40, 3)).toHaveLength(40);
+  });
+
+  it('scores each subject out of 100 and totals out of 400', () => {
+    const qs = buildExam([ENGLISH, MATHS, PHYSICS, CHEMISTRY], 'quick', 1);
+    const results = Object.fromEntries(qs.map((q, i) => [i, q.subject !== 'physics']));
+    const s = scoreExam(qs, results);
+    expect(s.max).toBe(400);
+    expect(s.total).toBe(300);
+    expect(s.subjects.find((x) => x.subject === 'physics')?.score).toBe(0);
   });
 });
 

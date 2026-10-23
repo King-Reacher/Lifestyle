@@ -1,5 +1,5 @@
-import type { Course, Exercise, Lesson, Rng } from './types';
-import { br, choice, frac, gcd, int, lcm, num, pickOne, simplify } from './util';
+import type { Course, Exercise, Lesson, Rng } from '../types';
+import { br, choice, frac, gcd, int, lcm, num, pickOne, simplify } from '../util';
 
 /* Unit 1: Number foundations */
 
@@ -958,7 +958,3 @@ export const MATHS: Course = {
   upcoming: ['Number bases', 'Indices & logarithms', 'Surds', 'Sets', 'Algebra & formula manipulation', 'Equations & inequalities'],
 };
 
-/** For the review queue and tests: every lesson's exercises, built once. */
-export function allLessons(course: Course): Lesson[] {
-  return course.units.flatMap((u) => u.lessons);
-}

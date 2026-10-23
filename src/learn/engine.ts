@@ -1,4 +1,5 @@
 import { addDays, diffDays, type ISODate } from '../lib/dates';
+import type { ExamRecord } from './exam';
 import type { Course, Exercise, InputEx, Lesson, Teach } from './types';
 import { gcd, normalise, parseRational, seeded } from './util';
 
@@ -145,9 +146,10 @@ export interface LearnState {
   lessons: Record<string, LessonRecord>;
   xpByDay: Record<ISODate, number>;
   review: ReviewItem[];
+  exams: ExamRecord[];
 }
 
-export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [] });
+export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [], exams: [] });
 
 /** Days until the next review, by box. */
 const INTERVALS = [0, 1, 2, 4, 7, 15];
@@ -172,6 +174,7 @@ export const dueReviews = (review: ReviewItem[], day: ISODate) => review.filter(
 export function recordLesson(state: LearnState, lessonId: string, s: Session, day: ISODate, at = new Date().toISOString()): LearnState {
   const prev = state.lessons[lessonId];
   return {
+    ...state,
     lessons: {
       ...state.lessons,
       [lessonId]: { times: (prev?.times ?? 0) + 1, bestAccuracy: Math.max(prev?.bestAccuracy ?? 0, accuracy(s)), lastAt: at },

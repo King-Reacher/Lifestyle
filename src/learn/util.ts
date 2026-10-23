@@ -1,4 +1,5 @@
-import type { ChoiceEx, Rng } from './types';
+import type { Who } from '../components/Character';
+import type { ChoiceEx, MatchEx, OrderEx, Rng, Teach, Tip, TrueFalseEx } from './types';
 
 /** Small, fast seeded RNG (mulberry32), so a lesson can be replayed with the same numbers. */
 export function seeded(seed: number): Rng {
@@ -92,3 +93,27 @@ export function parseRational(input: string): [number, number] | null {
   }
   return null;
 }
+
+/** Compact builders for hand-written content. */
+export function mc(id: string, prompt: string, options: string[], answer: number, explain: string, tip?: Tip): ChoiceEx {
+  return { kind: 'choice', id, prompt, options, answer, explain, tip };
+}
+
+export function tf(id: string, prompt: string, answer: boolean, explain: string, tip?: Tip): TrueFalseEx {
+  return { kind: 'truefalse', id, prompt, answer, explain, tip };
+}
+
+export function match(id: string, prompt: string, pairs: [string, string][], explain: string): MatchEx {
+  return { kind: 'match', id, prompt, pairs, explain };
+}
+
+export function order(id: string, prompt: string, tiles: string[], explain: string): OrderEx {
+  return { kind: 'order', id, prompt, tiles, explain };
+}
+
+export function teach(id: string, who: Who, title: string, body: string[], extra: Pick<Teach, 'example' | 'hook'> = {}): Teach {
+  return { kind: 'teach', id, who, title, body, ...extra };
+}
+
+/** Round to a few decimals and drop float noise, e.g. 0.30000000000000004 becomes "0.3". */
+export const dec = (n: number, places = 4) => String(Number(n.toFixed(places)));
