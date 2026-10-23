@@ -5,9 +5,11 @@ import { emptyMoney, type MoneyState } from './money';
 export interface CodeState {
   scratch: string;
   career: Record<string, boolean>;
+  /** Your own code for each invent challenge, and whether it passed. */
+  invented: Record<string, { code: string; done: boolean }>;
 }
 
-export const emptyCode = (): CodeState => ({ scratch: '', career: {} });
+export const emptyCode = (): CodeState => ({ scratch: '', career: {}, invented: {} });
 import type { Entry } from './ledger';
 import { getWebApp } from './telegram';
 
@@ -41,6 +43,7 @@ export function parseData(text: string | null | undefined): AppData | null {
       xpByDay: l.xpByDay && typeof l.xpByDay === 'object' ? l.xpByDay : {},
       review: Array.isArray(l.review) ? l.review.filter((r: { ex?: unknown; due?: unknown }) => r && r.ex && typeof r.due === 'string') : [],
       exams: Array.isArray(l.exams) ? l.exams : [],
+      flagged: Array.isArray(l.flagged) ? l.flagged.filter((f: { card?: { id?: unknown } }) => f && f.card && typeof f.card.id === 'string') : [],
     };
     const m = raw.money ?? {};
     const base = emptyMoney();
@@ -52,7 +55,11 @@ export function parseData(text: string | null | undefined): AppData | null {
       checkins: Array.isArray(m.checkins) ? m.checkins : [],
     };
     const c = raw.code ?? {};
-    const code: CodeState = { scratch: typeof c.scratch === 'string' ? c.scratch : '', career: c.career && typeof c.career === 'object' ? c.career : {} };
+    const code: CodeState = {
+      scratch: typeof c.scratch === 'string' ? c.scratch : '',
+      career: c.career && typeof c.career === 'object' ? c.career : {},
+      invented: c.invented && typeof c.invented === 'object' ? c.invented : {},
+    };
     return { version: 1, entries, learn, money, code, createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString() };
   } catch {
     return null;

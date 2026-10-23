@@ -1650,3 +1650,28 @@ input[type='checkbox'] {
 .tool-card .big {
   font-size: 26px;
 }
+
+/* Do you understand? */
+
+.player-bottom:empty {
+  display: none;
+}
+
+.understand {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--border);
+  scroll-margin-top: 10px;
+}
+
+.understand-again {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+}
+
+.revisit-card {
+  border-left: 4px solid var(--gold);
+}

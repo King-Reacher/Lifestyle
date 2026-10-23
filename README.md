@@ -83,6 +83,21 @@ Every subject has its foundation units built. Each course lists its next units o
   - Every model solution passes and every starter fails.
   - A simulated learner who only follows the ghost text rebuilds a working solution for every exercise.
 
+## Learning that checks you understand
+
+- **"Do you understand?"** follows every explanation. Yes moves on. No offers:
+  - **Make it simpler:** hard words in plain English (a built-in dictionary of about 110 terms), the main idea, the memory hook and the example.
+  - **Break it down:** one idea at a time, each with its hard words explained; "Stuck here" flags that exact line.
+  - **Show me an example:** the card's example plus the lesson's next question, worked with its answer and reasoning.
+  - **Type what I think:** explain it in your own words. The app checks which key ideas you mentioned and which you missed, and saves your explanation to the ledger. It checks key ideas, not meaning.
+  - After two tries you can **flag it and continue**. Flagged explanations wait under "To revisit" in Learn.
+- **Invent mode (Code lab):** eight open briefs (tip calculator, letter grades, times table, savings countdown, password checker, word counter, admission checker, FizzBuzz).
+  - No model answer and no ghost-text guide. Hints teach how to think, one at a time.
+  - Checks accept any working approach. Finishing one unlocks stretch ideas.
+  - "My own idea" turns a sentence into a planning outline to code under.
+  - Five inventions ticks the career milestone automatically.
+- **Editor:** Enter after `{` closes the block for you, with the cursor indented inside it.
+
 ## Put it on Telegram
 
 1. **Create the bot.** In Telegram, open [@BotFather](https://t.me/BotFather) and send `/newbot`.

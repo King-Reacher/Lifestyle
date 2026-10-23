@@ -99,7 +99,7 @@ const tags: Lesson = {
       'A negative statement takes a positive tag: "He didn\'t call, did he?"',
       'Words like "nobody", "never", "hardly" make the statement negative: "Nobody came, did they?"',
       'Special cases: "I am right, aren\'t I?" and "Let\'s go, shall we?"',
-    ]),
+    ], { example: ["You are ready, aren't you?", "He can't swim, can he?", 'Nobody saw it, did they?'], hook: { kind: 'memory', text: 'A question tag flips the statement: positive becomes negative, negative becomes positive. Same helper verb, same person.' } }),
   ],
   exercises: [
     mc('e1-tags-1', 'She is coming, ___?', ["isn't she", 'is she', "doesn't she", "wasn't she"], 0, 'Positive "is" takes the negative tag "isn\'t she".'),

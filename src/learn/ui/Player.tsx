@@ -4,6 +4,7 @@ import { pick } from '../../lib/lines';
 import { confirmAction, getWebApp, haptic } from '../../lib/telegram';
 import {
   accuracy,
+  flagCard,
   answer,
   correctAnswer,
   current,
@@ -19,7 +20,11 @@ import {
   type Session,
 } from '../engine';
 import type { Exercise, Teach, Tip } from '../types';
+import { today } from '../../lib/dates';
+import type { Area } from '../../lib/ledger';
+import { uid, useStore } from '../../lib/store';
 import { ExerciseView, PROMPT_LABEL } from './Exercises';
+import { UnderstandHelp } from './Understand';
 
 const PRAISE: { who: Who; text: string }[] = [
   { who: 'tunde', text: "Correct! You're on fire!" },
@@ -40,7 +45,7 @@ export function TipBox({ tip }: { tip: Tip }) {
   );
 }
 
-function TeachView({ card }: { card: Teach }) {
+export function TeachView({ card }: { card: Teach }) {
   return (
     <div className="teach">
       <Say who={card.who} text={card.title} size={84} />
@@ -82,6 +87,7 @@ export function Player({
   host,
   onAnswer,
   onExit,
+  area = 'jamb',
 }: {
   title: string;
   items: Item[];
@@ -89,7 +95,11 @@ export function Player({
   /** Called for every graded answer (used by review mode). */
   onAnswer?: (ex: Exercise, correct: boolean) => void;
   onExit: (r: PlayerResult) => void;
+  /** Ledger area for explanations you write in your own words. */
+  area?: Area;
 }) {
+  const { update } = useStore();
+  const [help, setHelp] = useState(false);
   const [session, setSession] = useState(() => startSession(items));
   const [phase, setPhase] = useState<'answering' | 'feedback'>('answering');
   const [ready, setReady] = useState(false);
@@ -135,6 +145,7 @@ export function Player({
 
   const next = () => {
     haptic();
+    setHelp(false);
     setSession((s) => answer(s, item && !isTeach(item) ? correct : true));
     setPhase('answering');
     setReady(false);
@@ -209,6 +220,23 @@ export function Player({
 
       <div className="player-body" key={turn}>
         {isCard && <TeachView card={item as Teach} />}
+        {isCard && help && (
+          <UnderstandHelp
+            card={item as Teach}
+            worked={session.queue.slice(session.index + 1).find((i): i is Exercise => !isTeach(i))}
+            onUnderstood={next}
+            onFlag={(note) => {
+              update((d) => ({ ...d, learn: flagCard(d.learn, item as Teach, note) }));
+              next();
+            }}
+            onSaveExplanation={(text) =>
+              update((d) => ({
+                ...d,
+                entries: [...d.entries, { id: uid(), at: new Date().toISOString(), date: today(), type: 'learned', area, text: `In my own words, ${(item as Teach).title}: ${text}` }],
+              }))
+            }
+          />
+        )}
         {ex && (
           <>
             <div className="eyebrow" style={{ color: CAST[host].color }}>
@@ -262,10 +290,20 @@ export function Player({
         </div>
       ) : (
         <div className="player-bottom">
-          {isCard ? (
-            <button className="btn go block" onClick={next}>
-              Continue
-            </button>
+          {isCard && help ? null : isCard ? (
+            <>
+              <div className="eyebrow" style={{ textAlign: 'center', marginBottom: 8 }}>
+                Do you understand?
+              </div>
+              <div className="row" style={{ gap: 10 }}>
+                <button className="btn grow" onClick={() => (haptic(), setHelp(true))}>
+                  No, not yet
+                </button>
+                <button className="btn go grow" onClick={next}>
+                  Yes, I get it
+                </button>
+              </div>
+            </>
           ) : ex?.kind === 'match' ? (
             <div className="small muted" style={{ textAlign: 'center' }}>
               Tap a left item, then its partner on the right

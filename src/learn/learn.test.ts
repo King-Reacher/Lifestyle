@@ -9,6 +9,7 @@ import {
   correctAnswer,
   dueReviews,
   emptyLearn,
+  flagCard,
   isFailed,
   isFinished,
   isTeach,
@@ -24,6 +25,7 @@ import {
 import { config, groupPeriod, molarMass } from './courses/chemistry';
 import { allLessons, CHEMISTRY, COURSES, ENGLISH, MATHS, PHYSICS } from './courses';
 import { buildExam, drawQuestions, scoreExam } from './exam';
+import { coverage, keyIdeas, termsIn } from './glossary';
 import type { Exercise, InputEx } from './types';
 import { gcd, parseRational } from './util';
 
@@ -247,5 +249,44 @@ describe('progress and spaced repetition', () => {
   it('old backups without learning data still load', () => {
     const d = parseData(JSON.stringify({ version: 1, entries: [], createdAt: DAY }));
     expect(d?.learn).toEqual(emptyLearn());
+  });
+});
+
+describe('do you understand?', () => {
+  it('finds hard words in an explanation, without false matches inside other words', () => {
+    const terms = termsIn('The numerator sits over the denominator. A molecule is not a mole.').map((t) => t.term);
+    expect(terms).toEqual(expect.arrayContaining(['numerator', 'denominator', 'mole']));
+    expect(termsIn('molecules everywhere').map((t) => t.term)).not.toContain('mole');
+  });
+
+  it('prefers the longer term when one contains another', () => {
+    const terms = termsIn('the atomic number tells you the protons').map((t) => t.term);
+    expect(terms).toContain('atomic number');
+  });
+
+  it('checks which key ideas an explanation covers', () => {
+    const ideas = keyIdeas('A vector has magnitude and direction. Velocity is a vector; speed is a scalar.');
+    expect(ideas).toEqual(expect.arrayContaining(['vector', 'magnitude', 'scalar']));
+    const { covered, missing } = coverage(['vector', 'magnitude', 'direction'], 'vectors have a size (magnitude) and a direction');
+    expect(covered).toEqual(['vector', 'magnitude', 'direction']);
+    expect(missing).toEqual([]);
+    expect(coverage(['vector', 'direction'], 'it is about size').missing).toEqual(['vector', 'direction']);
+  });
+
+  it('every teaching card has words the dictionary can explain, or a hook or example', () => {
+    for (const { course } of COURSES)
+      for (const lesson of allLessons(course))
+        for (const card of lesson.teach) {
+          const text = [card.title, ...card.body].join(' ');
+          expect(termsIn(text).length > 0 || !!card.hook || !!card.example, card.id).toBe(true);
+        }
+  });
+
+  it('flags a card once, keeping the latest note', () => {
+    const card = allLessons(MATHS)[0].teach[0];
+    let s = flagCard(emptyLearn(), card, 'first');
+    s = flagCard(s, card, 'second');
+    expect(s.flagged).toHaveLength(1);
+    expect(s.flagged[0].note).toBe('second');
   });
 });

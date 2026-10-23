@@ -4,6 +4,7 @@ import { ConsoleView } from '../learn/ui/Exercises';
 import { useStore } from '../lib/store';
 import { haptic } from '../lib/telegram';
 import { CodeEditor } from './CodeEditor';
+import { InventChallenge, InventList } from './Invent';
 import { run, type RunResult } from './runner';
 
 const EXAMPLES: { label: string; code: string }[] = [
@@ -27,6 +28,8 @@ export function CodeLab({ onBack }: { onBack: () => void }) {
   const { data, update } = useStore();
   const [result, setResult] = useState<RunResult | null>(null);
   const [running, setRunning] = useState(false);
+  const [mode, setMode] = useState<'play' | 'invent'>('invent');
+  const [challenge, setChallenge] = useState<string | null>(null);
   const code = data.code.scratch || EXAMPLES[0].code;
 
   const setCode = (scratch: string) => update((d) => ({ ...d, code: { ...d.code, scratch } }));
@@ -38,11 +41,37 @@ export function CodeLab({ onBack }: { onBack: () => void }) {
     setRunning(false);
   };
 
+  if (mode === 'invent' && challenge) return <InventChallenge id={challenge} onBack={() => setChallenge(null)} />;
+
+  const tabs = (
+    <div className="row" style={{ gap: 8, margin: '6px 0 10px' }}>
+      <button className={`btn sm grow ${mode === 'invent' ? 'primary' : ''}`} onClick={() => setMode('invent')}>
+        💡 Invent
+      </button>
+      <button className={`btn sm grow ${mode === 'play' ? 'primary' : ''}`} onClick={() => setMode('play')}>
+        🧪 Playground
+      </button>
+    </div>
+  );
+
+  if (mode === 'invent') {
+    return (
+      <>
+        <button className="btn sm ghost" onClick={onBack}>
+          ← Coding
+        </button>
+        {tabs}
+        <InventList onOpen={setChallenge} />
+      </>
+    );
+  }
+
   return (
     <>
       <button className="btn sm ghost" onClick={onBack}>
         ← Coding
       </button>
+      {tabs}
       <Say who="zara" text="Your lab. Write anything, run it, break it, fix it. That's how engineers are made." size={72} />
       <div className="chips" style={{ margin: '6px 0 10px' }}>
         {EXAMPLES.map((ex) => (

@@ -32,7 +32,7 @@ const inconsistencies: Lesson = {
       'Stories have shape: time, place, people, sequence. Lies and mistakes usually break one of them.',
       'Check timelines ("you left at 5 but arrived at 4:30?"), quantities, and who could know what.',
       'Inconsistency is a signal to ask a calm question, not proof of lying. Memory is imperfect for everyone.',
-    ]),
+    ], { example: ['"I left home at 5pm and got to school at 4:30pm." The times are impossible.', '"I was alone all day, and my friend said hi." Who said hi, then?'], hook: { kind: 'memory', text: 'Check the four Ws: When, Where, Who, What order. Most inconsistencies hide in one of them.' } }),
   ],
   exercises: [
     mc('a1-incon-1', '"I was home all day yesterday," he says, then mentions the traffic on the way back from the market. What is inconsistent?', ['Nothing', 'He mentioned traffic', 'Being home all day vs. coming back from the market', 'The market is closed on Sundays'], 2, 'He could not be home all day and also travel back from the market.'),
@@ -126,7 +126,7 @@ const communication: Lesson = {
       'Short sentences and plain words beat big words. Clarity is respect for the listener.',
       'Listen to understand, not to reply. Repeat back what you heard before disagreeing.',
       'Ask open questions ("What happened?") to learn, closed ones ("Did you finish?") to confirm.',
-    ]),
+    ], { example: ['Point: "Can I submit on Friday?"', 'Reason: "I was ill on Tuesday."', 'Example: "Here is the doctor\'s note."'], hook: { kind: 'memory', text: 'PRE: Point, Reason, Example. Say the point in the first sentence.' } }),
   ],
   exercises: [
     mc('a6-comm-1', 'Which opening is clearest for a request to your teacher?', ["Good morning sir, I was thinking that maybe, if it's okay, perhaps…", 'Sir, may I submit the assignment on Friday? I was ill on Tuesday and Wednesday.', 'Sir, I have a problem.', "Please sir, it's not my fault."], 1, 'Point first (the request), then the reason. Short and respectful.'),

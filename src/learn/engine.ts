@@ -144,14 +144,26 @@ export interface LessonRecord {
   lastAt: string;
 }
 
+/** A teaching card you said you didn't understand yet, kept so you can come back to it. */
+export interface Flagged {
+  card: Teach;
+  at: string;
+  note?: string;
+}
+
 export interface LearnState {
   lessons: Record<string, LessonRecord>;
   xpByDay: Record<ISODate, number>;
   review: ReviewItem[];
   exams: ExamRecord[];
+  flagged: Flagged[];
 }
 
-export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [], exams: [] });
+export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [], exams: [], flagged: [] });
+
+export function flagCard(state: LearnState, card: Teach, note?: string, at = new Date().toISOString()): LearnState {
+  return { ...state, flagged: [...state.flagged.filter((f) => f.card.id !== card.id), { card, at, note }] };
+}
 
 /** Days until the next review, by box. */
 const INTERVALS = [0, 1, 2, 4, 7, 15];

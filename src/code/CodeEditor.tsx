@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent } from 'react';
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { haptic } from '../lib/telegram';
 import { suggest, tokenize } from './complete';
 
@@ -16,15 +16,21 @@ export function CodeEditor({ value, onChange, solution, minRows = 8 }: { value: 
   const [focused, setFocused] = useState(false);
   const ghost = focused ? suggest(value, caret, solution) : '';
 
+  // Where the caret should go after a programmatic edit. Applied right after React
+  // updates the textarea, before the next keystroke can arrive.
+  const pendingCaret = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (pendingCaret.current === null || !el) return;
+    el.focus();
+    el.setSelectionRange(pendingCaret.current, pendingCaret.current);
+    pendingCaret.current = null;
+  });
+
   const setText = (next: string, pos: number) => {
+    pendingCaret.current = pos;
     onChange(next);
     setCaret(pos);
-    requestAnimationFrame(() => {
-      const el = ref.current;
-      if (!el) return;
-      el.focus();
-      el.setSelectionRange(pos, pos);
-    });
   };
 
   const insert = (text: string, back = 0) => {
@@ -50,8 +56,19 @@ export function CodeEditor({ value, onChange, solution, minRows = 8 }: { value: 
       e.preventDefault();
       const start = e.currentTarget.selectionStart;
       const line = value.slice(value.lastIndexOf('\n', start - 1) + 1, start);
-      const indent = line.match(/^\s*/)![0] + (/[{([]\s*$/.test(line) ? '  ' : '');
-      insert(`\n${indent}`);
+      const base = line.match(/^\s*/)![0];
+      const opensBlock = /\{\s*$/.test(line);
+      const unclosed = (value.match(/\{/g) ?? []).length > (value.match(/\}/g) ?? []).length;
+      const restOfLine = value.slice(start).split('\n')[0].trim();
+      if (opensBlock && restOfLine.startsWith('}')) {
+        // Enter between { and }: move the closing brace down a line.
+        insert(`\n${base}  \n${base}`, base.length + 1);
+      } else if (opensBlock && unclosed && restOfLine === '') {
+        // Close the block for you and put the caret inside it.
+        insert(`\n${base}  \n${base}}`, base.length + 2);
+      } else {
+        insert(`\n${base}${/[{([]\s*$/.test(line) ? '  ' : ''}`);
+      }
     }
   };
 

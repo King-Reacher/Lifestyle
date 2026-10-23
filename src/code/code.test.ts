@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CODING } from '../learn/courses';
 import { allLessons } from '../learn/courses';
 import type { CodeEx } from '../learn/types';
+import { CHALLENGES, outputOk, scaffold } from './challenges';
 import { suggest, tokenize } from './complete';
 import { evaluate, passed } from './runner';
 
@@ -101,5 +102,38 @@ describe('ghost suggestions', () => {
   it('colours keywords, strings, numbers and comments', () => {
     const kinds = tokenize('const x = "a"; // hi\nlog(5)').map((t) => t.kind);
     expect(kinds).toEqual(expect.arrayContaining(['kw', 'str', 'com', 'fn', 'num']));
+  });
+});
+
+describe('invent challenges', () => {
+  // Reference solutions live only in tests, so the app never shows a model answer for these.
+  const REFERENCE: Record<string, string> = {
+    tip: 'function tip(bill, percent) { return bill * percent / 100; }',
+    grade: 'function letter(s) { if (s >= 70) return "A"; if (s >= 60) return "B"; if (s >= 50) return "C"; if (s >= 45) return "D"; return "F"; }',
+    table: 'for (let i = 1; i <= 10; i++) console.log(`7 x ${i} = ${7 * i}`);',
+    weeks: 'function weeksToGoal(goal, perWeek) { return Math.ceil(goal / perWeek); }',
+    password: 'function isStrong(p) { return p.length >= 8 && /[0-9]/.test(p); }',
+    words: 'function countWords(t) { return t.split(" ").filter((w) => w !== "").length; }',
+    aggregate: 'function canApply(scores, cutoff) { let total = 0; for (const s of scores) total += s; return total >= cutoff && scores.every((s) => s >= 40); }',
+    fizz: 'for (let i = 1; i <= 15; i++) console.log(i % 15 === 0 ? "FizzBuzz" : i % 3 === 0 ? "Fizz" : i % 5 === 0 ? "Buzz" : i);',
+  };
+
+  for (const c of CHALLENGES) {
+    it(`${c.id}: a correct solution passes, an empty one fails`, () => {
+      const good = evaluate(REFERENCE[c.id], c.checks);
+      expect(passed(good) && outputOk(good.output, c.outputMatches), JSON.stringify(good)).toBe(true);
+      const empty = evaluate('// nothing yet', c.checks);
+      expect(passed(empty) && outputOk(empty.output, c.outputMatches)).toBe(false);
+    });
+  }
+
+  it('a different but valid approach passes too', () => {
+    const loopVersion = 'function weeksToGoal(goal, perWeek) { let saved = 0, weeks = 0; while (saved < goal) { saved += perWeek; weeks++; } return weeks; }';
+    const c = CHALLENGES.find((x) => x.id === 'weeks')!;
+    expect(passed(evaluate(loopVersion, c.checks))).toBe(true);
+  });
+
+  it('gives a planning outline for your own idea', () => {
+    expect(scaffold('days until JAMB')).toMatch(/My idea: days until JAMB[\s\S]*What goes in/);
   });
 });

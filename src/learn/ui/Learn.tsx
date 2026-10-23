@@ -9,7 +9,7 @@ import type { Course, Lesson } from '../types';
 import { CodeLab } from '../../code/CodeLab';
 import { CareerPath } from './CareerPath';
 import { ExamHall } from './ExamHall';
-import { Player, type PlayerResult } from './Player';
+import { Player, TeachView, type PlayerResult } from './Player';
 
 const REVIEW_XP = 5;
 const EXAM_TAB = 'exam';
@@ -20,7 +20,7 @@ export function Learn() {
   const { data, update, cheer } = useStore();
   const [tab, setTab] = useState('maths');
   const [playing, setPlaying] = useState<Playing | null>(null);
-  const [sub, setSub] = useState<'career' | 'lab' | null>(null);
+  const [sub, setSub] = useState<'career' | 'lab' | 'revisit' | null>(null);
   const date = today();
   const learn = data.learn;
   const due = dueReviews(learn.review, date);
@@ -66,7 +66,8 @@ export function Learn() {
 
   if (playing?.kind === 'lesson') {
     const p = playing;
-    return <Player title={p.lesson.title} items={p.items} host={p.host} onExit={(r) => finishLesson(p.course, p.lesson, p.host, r)} />;
+    const area = p.course.id === 'academy' ? 'academy' : p.course.id === 'coding' ? 'career' : 'jamb';
+    return <Player title={p.lesson.title} items={p.items} host={p.host} area={area} onExit={(r) => finishLesson(p.course, p.lesson, p.host, r)} />;
   }
   if (playing?.kind === 'review') {
     return (
@@ -82,6 +83,7 @@ export function Learn() {
 
   if (sub === 'lab') return <CodeLab onBack={() => setSub(null)} />;
   if (sub === 'career') return <CareerPath onBack={() => setSub(null)} />;
+  if (sub === 'revisit') return <Revisit onBack={() => setSub(null)} />;
 
   return (
     <>
@@ -115,6 +117,13 @@ export function Learn() {
             </button>
           </Say>
         </div>
+      )}
+
+      {learn.flagged.length > 0 && (
+        <button className="card revisit-card money-card" onClick={() => (haptic(), setSub('revisit'))}>
+          <b>📌 {learn.flagged.length} explanation{learn.flagged.length > 1 ? 's' : ''} to revisit</b>
+          <div className="small muted">Things you said you didn't understand yet. Come back when you're fresh.</div>
+        </button>
       )}
 
       {tab === 'coding' && (
@@ -191,6 +200,39 @@ function CoursePath({ course, onStart }: { course: Course; onStart: (c: Course, 
           ))}
         </div>
       </div>
+    </>
+  );
+}
+
+function Revisit({ onBack }: { onBack: () => void }) {
+  const { data, update, cheer } = useStore();
+  const items = [...data.learn.flagged].reverse();
+
+  const clear = (id: string) => {
+    haptic('success');
+    update((d) => ({ ...d, learn: { ...d.learn, flagged: d.learn.flagged.filter((f) => f.card.id !== id) } }));
+    cheer({ who: 'mei', text: 'See? It just needed a second look. That is how understanding works.' });
+  };
+
+  return (
+    <>
+      <button className="btn sm ghost" onClick={onBack}>
+        ← Learn
+      </button>
+      <Say who="mei" text={items.length ? 'Read each one slowly. Say it out loud. When it clicks, tap "I get it now".' : 'Nothing left to revisit. Clean slate!'} size={72} />
+      {items.map((f) => (
+        <div key={f.card.id} className="card revisit-card">
+          {f.note && (
+            <p className="small" style={{ marginTop: 0, fontWeight: 800, color: 'var(--gold)' }}>
+              {f.note}
+            </p>
+          )}
+          <TeachView card={f.card} />
+          <button className="btn go block" style={{ marginTop: 10 }} onClick={() => clear(f.card.id)}>
+            I get it now ✓
+          </button>
+        </div>
+      ))}
     </>
   );
 }

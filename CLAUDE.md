@@ -22,6 +22,6 @@ npm run build
 
 ## Content
 
-- Maths lessons live in `src/learn/maths.ts`. Generated questions must stay correct for every seed; `src/learn/learn.test.ts` checks 200 seeds per lesson.
+- Lessons live in `src/learn/courses/` (one file per subject). Generated questions must stay correct for every seed; `src/learn/learn.test.ts` checks 200 seeds per lesson.
 - Coding lessons live in `src/learn/courses/coding.ts`. Every code exercise needs a starter that fails and a solution that passes its checks; `src/code/code.test.ts` enforces both and replays the ghost-text guide.
 - Characters are original. Do not copy existing anime or cartoon characters or their artwork into the app.
