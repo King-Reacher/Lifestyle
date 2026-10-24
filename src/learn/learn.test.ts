@@ -166,6 +166,90 @@ describe('new JAMB units: independent answer checks', () => {
   });
 });
 
+describe('advanced maths: independent answer checks', () => {
+  const idOf = (ex: Exercise) => ex.id.split('#')[0];
+  const each = (id: string, want: string[], f: (ex: Exercise) => void) => {
+    let seen = 0;
+    const lesson = allLessons(MATHS).find((l) => l.id === id)!;
+    for (let seed = 1; seed <= 200; seed++)
+      for (const ex of buildLesson(lesson, seed)) if (!isTeach(ex) && want.includes(idOf(ex))) (seen++, f(ex));
+    expect(seen, id).toBeGreaterThan(0);
+  };
+  const SUPS = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  /** Evaluates a polynomial written the way the lessons print it, like "−3x² + x − 4". */
+  const evalPoly = (text: string, x: number) => {
+    const t = text.replace(/ \+ C$/, '').replace(/−/g, '-').replace(/ /g, '');
+    let total = 0;
+    for (const m of t.matchAll(/([+-]?)(\d*)(x([⁰¹²³⁴⁵⁶⁷⁸⁹]*))?/g)) {
+      if (!m[0]) continue;
+      const coef = (m[1] === '-' ? -1 : 1) * (m[2] ? Number(m[2]) : 1);
+      const pow = m[3] ? (m[4] ? Number([...m[4]].map((c) => SUPS.indexOf(c)).join('')) : 1) : 0;
+      total += coef * x ** pow;
+    }
+    return total;
+  };
+  const OPS: Record<string, (a: number, b: number) => boolean> = { '<': (a, b) => a < b, '>': (a, b) => a > b, '≤': (a, b) => a <= b, '≥': (a, b) => a >= b };
+
+  it('inequality answers agree with the original inequality at test points', () => {
+    each('m8-inequalities', ['m8-inequality'], (ex) => {
+      if (ex.kind !== 'choice') return;
+      const [, lhs, op, rhs] = ex.prompt.match(/^Solve (.+) ([<>≤≥]) (−?\d+)$/)!;
+      const [, aop, bound] = ex.options[ex.answer].match(/^x ([<>≤≥]) (−?\d+)$/)!;
+      const b0 = Number(bound.replace('−', '-'));
+      for (const x of [b0 - 1, b0 - 0.5, b0, b0 + 0.5, b0 + 1])
+        expect(OPS[op](evalPoly(lhs, x), Number(rhs.replace('−', '-'))), `${ex.prompt} at ${x}`).toBe(OPS[aop](x, b0));
+    });
+  });
+
+  it('derivatives match a numerical slope, and integrals differentiate back', () => {
+    each('m12-diff', ['m12-diff'], (ex) => {
+      if (ex.kind !== 'choice') return;
+      const y = ex.prompt.replace('Differentiate y = ', '');
+      for (const x of [-2, 0.5, 3]) {
+        const slope = (evalPoly(y, x + 1e-5) - evalPoly(y, x - 1e-5)) / 2e-5;
+        expect(evalPoly(ex.options[ex.answer], x), ex.prompt).toBeCloseTo(slope, 3);
+      }
+    });
+    each('m12-integration', ['m12-integrate'], (ex) => {
+      if (ex.kind !== 'choice') return;
+      const f = ex.prompt.replace('Integrate ', '').replace(' with respect to x', '');
+      const F = ex.options[ex.answer];
+      for (const x of [-1.5, 0.5, 2]) expect((evalPoly(F, x + 1e-5) - evalPoly(F, x - 1e-5)) / 2e-5, ex.prompt).toBeCloseTo(evalPoly(f, x), 3);
+    });
+  });
+
+  it('AP and GP answers match the terms listed in the question', () => {
+    each('m8-sequences', ['m8-ap-term', 'm8-ap-sum', 'm8-gp-term', 'm8-gp-infinity'], (ex) => {
+      if (ex.kind !== 'input') return;
+      const nums = ex.prompt.slice(ex.prompt.lastIndexOf(' of ') + 4, ex.prompt.indexOf(', …')).split(', ').map((v) => Number(v.replace('−', '-')));
+      const n = Number(ex.prompt.match(/(\d+)(?:th| terms)/)?.[1]);
+      const ans = Number(ex.answers![0]);
+      const id = idOf(ex);
+      if (id.startsWith('m8-ap')) {
+        const terms = Array.from({ length: n }, (_, i) => nums[0] + i * (nums[1] - nums[0]));
+        expect(ans, ex.prompt).toBe(id === 'm8-ap-term' ? terms[n - 1] : terms.reduce((a, b) => a + b, 0));
+      } else if (id === 'm8-gp-term') expect(ans, ex.prompt).toBe(nums[0] * (nums[1] / nums[0]) ** (n - 1));
+      else expect(ans, ex.prompt).toBeCloseTo(nums[0] / (1 - nums[1] / nums[0]));
+    });
+  });
+
+  it('averages are right', () => {
+    each('m11-stats', ['m11-mean', 'm11-median', 'm11-mode', 'm11-range'], (ex) => {
+      if (ex.kind !== 'input') return;
+      const xs = ex.prompt.replace(/^Find the \w+ of /, '').split(', ').map(Number).sort((a, b) => a - b);
+      const ans = Number(ex.answers![0]);
+      const counts = xs.map((x) => xs.filter((y) => y === x).length);
+      const want = {
+        'm11-mean': xs.reduce((a, b) => a + b, 0) / xs.length,
+        'm11-median': xs[(xs.length - 1) / 2],
+        'm11-mode': xs[counts.indexOf(Math.max(...counts))],
+        'm11-range': xs[xs.length - 1] - xs[0],
+      }[idOf(ex)];
+      expect(ans, ex.prompt).toBe(want);
+    });
+  });
+});
+
 describe('chemistry facts', () => {
   it('fills electron shells 2, 8, 8, 2 and sums to Z', () => {
     expect(config(11)).toEqual([2, 8, 1]);

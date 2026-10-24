@@ -13,6 +13,7 @@ import { ENGLISH_NEXT } from './english-next';
 import { MATHS as MATHS_BASE } from './maths';
 import { MATHS_MORE } from './maths-more';
 import { MATHS_NEXT } from './maths-next';
+import { MATHS_ADV } from './maths-adv';
 import { PHYSICS as PHYSICS_BASE } from './physics';
 import { BIOLOGY_MORE, CHEMISTRY_MORE, PHYSICS_MORE } from './science-more';
 import { BIOLOGY_NEXT, CHEMISTRY_NEXT, PHYSICS_NEXT } from './science-next';
@@ -20,7 +21,7 @@ import { BIOLOGY_NEXT, CHEMISTRY_NEXT, PHYSICS_NEXT } from './science-next';
 /** Later units live in their own files; this puts each course back together. */
 const extend = (course: Course, more: Unit[], upcoming: string[]): Course => ({ ...course, units: [...course.units, ...more], upcoming });
 
-export const MATHS = extend(MATHS_BASE, [...MATHS_MORE, ...MATHS_NEXT], ['Inequalities', 'Sequences & series', 'Geometry & mensuration', 'Trigonometry', 'Statistics & probability', 'Calculus basics']);
+export const MATHS = extend(MATHS_BASE, [...MATHS_MORE, ...MATHS_NEXT, ...MATHS_ADV], ['Variation', 'Matrices & determinants', 'Coordinate geometry', 'Circle theorems', 'Bearings & distances']);
 export const PHYSICS = extend(PHYSICS_BASE, [...PHYSICS_MORE, ...PHYSICS_NEXT], ['Light & optics', 'Magnetism & induction', 'Modern physics']);
 export const CHEMISTRY = extend(CHEMISTRY_BASE, [...CHEMISTRY_MORE, ...CHEMISTRY_NEXT], ['Rates & equilibrium', 'Metals & non-metals', 'Chemistry & industry']);
 export const ENGLISH = extend(ENGLISH_BASE, [...ENGLISH_MORE, ENGLISH_DRILLS, ...ENGLISH_NEXT], ['Sentence interpretation', 'Literature in English', 'Essay & letter writing']);
