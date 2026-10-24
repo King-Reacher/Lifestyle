@@ -100,19 +100,19 @@ Every subject has its foundation units built. Each course lists its next units o
 
 ## Content so far
 
-109 lessons and about 600 exercise slots. Most maths and science exercises generate new numbers each time.
+138 lessons and about 770 exercise slots. Most maths and science exercises generate new numbers each time.
 
 | Course | Units |
 | --- | --- |
-| Mathematics | Number foundations; fractions, decimals and percentages; speed maths; bases, indices and standard form; algebra and changing the subject; logarithms, surds, sets and Venn diagrams; quadratic equations (factorising, sum and product of roots, the discriminant) |
-| English | Grammar foundations; words; idioms, prepositions and vocabulary; JAMB drills; Oral English (vowels, consonants, silent letters, stress, intonation); comprehension and summary |
-| Physics | Measurement and motion; matter and forces; energy; electricity (Ohm's law, series and parallel, power and cost); heat and waves |
-| Chemistry | Matter and atoms; formulas and the mole; reactions (balancing, acids, bases and salts); gas laws and electrolysis; organic chemistry |
-| Biology | Life and the cell; feeding and ecology; body systems; JAMB drills; genetics, blood groups and reproduction |
+| Mathematics | Number foundations; fractions, decimals and percentages; speed maths; bases, indices and standard form; algebra and changing the subject; logarithms, surds, sets and Venn diagrams; quadratic equations (factorising, sum and product of roots, the discriminant); inequalities, sequences and series; angles, Pythagoras, area and volume; trigonometry; statistics, probability, permutations and combinations; differentiation and integration |
+| English | Grammar foundations; words; idioms, prepositions and vocabulary; JAMB drills; Oral English (vowels, consonants, silent letters, stress, intonation); comprehension and summary; sentence interpretation and clauses; Literature (figures of speech, poetry, drama, prose); letters and essays |
+| Physics | Measurement and motion; matter and forces; energy; electricity (Ohm's law, series and parallel, power and cost); heat and waves; light and lenses; magnetism, induction and transformers; radioactivity |
+| Chemistry | Matter and atoms; formulas and the mole; reactions (balancing, acids, bases and salts); gas laws and electrolysis; organic chemistry; rates and equilibrium; metals, reactivity and industrial processes |
+| Biology | Life and the cell; feeding and ecology; body systems; JAMB drills; genetics, blood groups and reproduction; transport in plants, nerves and hormones, evolution, ecology |
 | Coding | How computers work; JavaScript first steps; decisions and loops; functions, arrays and objects; problem solving; array methods, recursion and sorting |
 | Academy | Schools 1 to 12 |
 
-A full JAMB simulation now has enough distinct questions in every subject (60 English, 40 for each of the others), and a test keeps it that way. Generated answers for quadratics, Venn diagrams, gas laws, hydrocarbon formulas and genetic crosses are checked by tests that work them out a second, independent way. Comprehension questions show their passage in a scrollable box above the question. Each course lists its next units on its own path.
+A full JAMB simulation now has enough distinct questions in every subject (60 English, 40 for each of the others), and a test keeps it that way. Generated answers for quadratics, inequalities, derivatives, integrals, sequences, averages, Venn diagrams, gas laws, lenses, transformers, half-life, hydrocarbon formulas, energy pyramids and genetic crosses are checked by tests that work them out a second, independent way. Comprehension questions show their passage in a scrollable box above the question. Each course lists its next units on its own path.
 
 ## Put it on Telegram
 

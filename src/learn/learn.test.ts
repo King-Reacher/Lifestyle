@@ -250,6 +250,37 @@ describe('advanced maths: independent answer checks', () => {
   });
 });
 
+describe('optics, induction and radioactivity: independent answer checks', () => {
+  const idOf = (ex: Exercise) => ex.id.split('#')[0];
+  const all = (course: typeof PHYSICS, want: string[]) => {
+    const out: InputEx[] = [];
+    for (const l of allLessons(course)) for (let seed = 1; seed <= 200; seed++) for (const ex of buildLesson(l, seed)) if (!isTeach(ex) && ex.kind === 'input' && want.includes(idOf(ex))) out.push(ex);
+    expect(out.length, want.join()).toBeGreaterThan(0);
+    return out;
+  };
+  const nums = (s: string) => [...s.matchAll(/\d+(\.\d+)?/g)].map((m) => Number(m[0]));
+
+  it('lens, transformer, half-life and energy answers follow their formulas', () => {
+    for (const ex of all(PHYSICS, ['p6-focal'])) {
+      const [u, v] = nums(ex.prompt);
+      expect(1 / u + 1 / v, ex.prompt).toBeCloseTo(1 / Number(ex.answers![0]));
+    }
+    for (const ex of all(PHYSICS, ['p7-transformer'])) {
+      const [np, ns, vp] = nums(ex.prompt);
+      expect(Number(ex.answers![0]), ex.prompt).toBeCloseTo((vp * ns) / np);
+    }
+    for (const ex of all(PHYSICS, ['p8-half-life'])) {
+      const [t, start, days] = nums(ex.prompt);
+      expect(Number(ex.answers![0]), ex.prompt).toBeCloseTo(start / 2 ** (days / t));
+    }
+    for (const ex of all(BIOLOGY, ['b6-energy'])) {
+      const [start] = nums(ex.prompt);
+      const level = ['primary', 'secondary', 'tertiary'].findIndex((w) => ex.prompt.includes(`the ${w}`)) + 1;
+      expect(Number(ex.answers![0]), ex.prompt).toBe(start / 10 ** level);
+    }
+  });
+});
+
 describe('chemistry facts', () => {
   it('fills electron shells 2, 8, 8, 2 and sums to Z', () => {
     expect(config(11)).toEqual([2, 8, 1]);
