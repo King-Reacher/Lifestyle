@@ -194,6 +194,18 @@ function MatchView({ ex, onPenalty, onSolved }: { ex: MatchEx; onPenalty: () => 
   );
 }
 
+/** A prompt may start with a reading passage, separated from the question by a blank line. */
+export function Prompt({ text }: { text: string }) {
+  const cut = text.lastIndexOf('\n\n');
+  if (cut < 0) return <h2 className="prompt">{text}</h2>;
+  return (
+    <>
+      <div className="passage">{text.slice(0, cut)}</div>
+      <h2 className="prompt">{text.slice(cut + 2)}</h2>
+    </>
+  );
+}
+
 export function ConsoleView({ result, expected }: { result: RunResult | null; expected?: string[] }) {
   if (!result) return null;
   return (

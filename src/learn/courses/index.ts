@@ -9,19 +9,22 @@ import { CODING_MORE } from './coding-more';
 import { BIOLOGY_DRILLS, ENGLISH_DRILLS } from './drills';
 import { ENGLISH as ENGLISH_BASE } from './english';
 import { ENGLISH_MORE } from './english-more';
+import { ENGLISH_NEXT } from './english-next';
 import { MATHS as MATHS_BASE } from './maths';
 import { MATHS_MORE } from './maths-more';
+import { MATHS_NEXT } from './maths-next';
 import { PHYSICS as PHYSICS_BASE } from './physics';
 import { BIOLOGY_MORE, CHEMISTRY_MORE, PHYSICS_MORE } from './science-more';
+import { BIOLOGY_NEXT, CHEMISTRY_NEXT, PHYSICS_NEXT } from './science-next';
 
 /** Later units live in their own files; this puts each course back together. */
 const extend = (course: Course, more: Unit[], upcoming: string[]): Course => ({ ...course, units: [...course.units, ...more], upcoming });
 
-export const MATHS = extend(MATHS_BASE, MATHS_MORE, ['Logarithms', 'Surds', 'Sets & Venn diagrams', 'Quadratic equations', 'Inequalities', 'Sequences & series', 'Geometry & mensuration', 'Trigonometry', 'Statistics & probability', 'Calculus basics']);
-export const PHYSICS = extend(PHYSICS_BASE, PHYSICS_MORE, ['Heat & temperature', 'Waves & sound', 'Light & optics', 'Electricity', 'Magnetism', 'Modern physics']);
-export const CHEMISTRY = extend(CHEMISTRY_BASE, CHEMISTRY_MORE, ['Gas laws', 'Electrolysis', 'Rates & equilibrium', 'Metals & non-metals', 'Organic chemistry']);
-export const ENGLISH = extend(ENGLISH_BASE, [...ENGLISH_MORE, ENGLISH_DRILLS], ['Comprehension & summary', 'Oral English: vowels & consonants', 'Stress & intonation', 'Sentence interpretation']);
-export const BIOLOGY = extend(BIOLOGY_BASE, [...BIOLOGY_MORE, BIOLOGY_DRILLS], ['Transport in plants', 'Reproduction', 'Genetics & variation', 'Evolution', 'Ecology in depth']);
+export const MATHS = extend(MATHS_BASE, [...MATHS_MORE, ...MATHS_NEXT], ['Inequalities', 'Sequences & series', 'Geometry & mensuration', 'Trigonometry', 'Statistics & probability', 'Calculus basics']);
+export const PHYSICS = extend(PHYSICS_BASE, [...PHYSICS_MORE, ...PHYSICS_NEXT], ['Light & optics', 'Magnetism & induction', 'Modern physics']);
+export const CHEMISTRY = extend(CHEMISTRY_BASE, [...CHEMISTRY_MORE, ...CHEMISTRY_NEXT], ['Rates & equilibrium', 'Metals & non-metals', 'Chemistry & industry']);
+export const ENGLISH = extend(ENGLISH_BASE, [...ENGLISH_MORE, ENGLISH_DRILLS, ...ENGLISH_NEXT], ['Sentence interpretation', 'Literature in English', 'Essay & letter writing']);
+export const BIOLOGY = extend(BIOLOGY_BASE, [...BIOLOGY_MORE, BIOLOGY_DRILLS, ...BIOLOGY_NEXT], ['Transport in plants', 'Evolution', 'Ecology in depth', 'Nervous & hormonal coordination']);
 export const CODING = extend(CODING_BASE, CODING_MORE, ['Strings in depth', 'Data structures: stacks, queues, maps', 'HTML & CSS', 'The DOM & events', 'Git & GitHub', 'React', 'APIs & async', 'Databases & SQL', 'Node.js backends', 'Security & testing']);
 export const ACADEMY = extend(ACADEMY_BASE, ACADEMY_MORE, ['Deeper lessons in every school']);
 

@@ -23,7 +23,7 @@ import type { Exercise, Teach, Tip } from '../types';
 import { today } from '../../lib/dates';
 import type { Area } from '../../lib/ledger';
 import { uid, useStore } from '../../lib/store';
-import { ExerciseView, PROMPT_LABEL } from './Exercises';
+import { ExerciseView, Prompt, PROMPT_LABEL } from './Exercises';
 import { UnderstandHelp } from './Understand';
 
 const PRAISE: { who: Who; text: string }[] = [
@@ -242,7 +242,7 @@ export function Player({
             <div className="eyebrow" style={{ color: CAST[host].color }}>
               {PROMPT_LABEL[ex.kind]}
             </div>
-            <h2 className="prompt">{ex.prompt}</h2>
+            <Prompt text={ex.prompt} />
             <ExerciseView
               ex={ex}
               locked={phase === 'feedback'}

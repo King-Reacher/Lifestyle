@@ -6,7 +6,7 @@ import { confirmAction, getWebApp, haptic } from '../../lib/telegram';
 import { courseById } from '../courses';
 import { addMistakes, correctAnswer } from '../engine';
 import { buildExam, FORMATS, scoreExam, type ExamFormat, type ExamQuestion, type ExamRecord } from '../exam';
-import { ExerciseView } from './Exercises';
+import { ExerciseView, Prompt } from './Exercises';
 import { TipBox } from './Player';
 
 const OPTIONAL = ['maths', 'physics', 'chemistry', 'biology'];
@@ -229,7 +229,7 @@ function ExamRunner({ phase, onFinish }: { phase: Extract<Phase, { kind: 'runnin
           <div className="eyebrow">
             {courseById(q.subject).title} · Question {index + 1}
           </div>
-          <h2 className="prompt">{q.ex.prompt}</h2>
+          <Prompt text={q.ex.prompt} />
           <ExerciseView
             ex={q.ex}
             locked={false}

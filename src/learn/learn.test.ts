@@ -95,6 +95,77 @@ describe('course content', () => {
   });
 });
 
+describe('new JAMB units: independent answer checks', () => {
+  const lesson = (course: typeof MATHS, id: string) => allLessons(course).find((l) => l.id === id)!;
+  /** Runs `f` on every generated exercise with one of these ids, and fails if there were none. */
+  const each = (course: typeof MATHS, id: string, want: string[], f: (ex: Exercise) => void) => {
+    let seen = 0;
+    for (let seed = 1; seed <= 200; seed++)
+      for (const ex of buildLesson(lesson(course, id), seed)) if (!isTeach(ex) && want.includes(idOf(ex))) (seen++, f(ex));
+    expect(seen, id).toBeGreaterThan(0);
+  };
+  const toNum = (s: string) => Number(s.replace(/−/g, '-'));
+  // Generated ids carry a "#seed-index" suffix.
+  const idOf = (ex: Exercise) => ex.id.split('#')[0];
+
+  it('quadratic roots really solve their equation', () => {
+    each(MATHS, 'm7-quadratics', ['m7-factorise'], (ex) => {
+      if (ex.kind !== 'choice') return;
+      const m = ex.prompt.match(/^Solve x² (?:([+−]) (\d*)x )?(?:([+−]) (\d+) )?= 0$/)!;
+      expect(m, ex.prompt).not.toBeNull();
+      const b = m[1] ? (m[1] === '−' ? -1 : 1) * Number(m[2] || 1) : 0;
+      const c = m[3] ? (m[3] === '−' ? -1 : 1) * Number(m[4]) : 0;
+      const roots = [...ex.options[ex.answer].matchAll(/x = (−?\d+)/g)].map((r) => toNum(r[1]));
+      for (const x of roots) expect(x * x + b * x + c, ex.prompt).toBe(0);
+    });
+  });
+
+  it('Venn answers add back up to the class size', () => {
+    each(MATHS, 'm6-sets', ['m6-venn-both', 'm6-venn-none'], (ex) => {
+      if (ex.kind !== 'input') return;
+      const [total, a, b, given] = [...ex.prompt.matchAll(/\d+/g)].map((m) => Number(m[0]));
+      const ans = Number(ex.answers![0]);
+      const [both, none] = idOf(ex) === 'm6-venn-both' ? [ans, given] : [given, ans];
+      expect(a - both + (b - both) + both + none, ex.prompt).toBe(total);
+      expect(Math.min(a, b) >= both && none >= 0, ex.prompt).toBe(true);
+    });
+  });
+
+  it('genetic crosses match a brute-force Punnett square', () => {
+    each(BIOLOGY, 'b5-genetics', ['b5-cross'], (ex) => {
+      if (ex.kind !== 'input') return;
+      const [p1, p2] = ex.prompt.match(/cross (\w\w) × (\w\w)/)!.slice(1);
+      const kids = [...p1].flatMap((x) => [...p2].map((y) => x + y));
+      const recessive = kids.filter((k) => k === k.toLowerCase()).length / 4;
+      expect(ex.rational![0] / ex.rational![1], ex.prompt).toBe(recessive);
+    });
+  });
+
+  it('gas law answers keep PV and V/T constant', () => {
+    each(CHEMISTRY, 'c4-gas', ['c4-boyle', 'c4-charles'], (ex) => {
+      if (ex.kind !== 'input') return;
+      const n = [...ex.prompt.matchAll(/\d+/g)].map((m) => Number(m[0]));
+      const ans = Number(ex.answers![0]);
+      if (idOf(ex) === 'c4-boyle') expect(n[0] * n[1], ex.prompt).toBeCloseTo(n[2] * ans);
+      if (idOf(ex) === 'c4-charles') expect(n[0] / (n[1] + 273), ex.prompt).toBeCloseTo(ans / (n[2] + 273));
+    });
+  });
+
+  it('hydrocarbon formulas follow their general formula', () => {
+    each(CHEMISTRY, 'c5-hydrocarbons', ['c5-formula', 'c5-name'], (ex) => {
+      if (ex.kind !== 'choice') return;
+      const text = idOf(ex) === 'c5-formula' ? ex.prompt : ex.options[ex.answer];
+      const name = idOf(ex) === 'c5-formula' ? text.match(/of (\w+)\?/)![1] : text;
+      const formula = idOf(ex) === 'c5-formula' ? ex.options[ex.answer] : ex.prompt.split(' ').pop()!;
+      const n = ['meth', 'eth', 'prop', 'but', 'pent', 'hex', 'hept', 'oct'].findIndex((p) => name.startsWith(p) && !name.startsWith(p + 'h')) + 1;
+      const digits = (s: string) => Number([...s].map((ch) => '₀₁₂₃₄₅₆₇₈₉'.indexOf(ch)).join('') || 1);
+      const [, cs, hs] = formula.match(/C([₀-₉]*)H([₀-₉]+)/)!;
+      const h = name.endsWith('ane') ? 2 * n + 2 : name.endsWith('ene') ? 2 * n : 2 * n - 2;
+      expect([digits(cs), digits(hs)], ex.prompt).toEqual([n, h]);
+    });
+  });
+});
+
 describe('chemistry facts', () => {
   it('fills electron shells 2, 8, 8, 2 and sums to Z', () => {
     expect(config(11)).toEqual([2, 8, 1]);
