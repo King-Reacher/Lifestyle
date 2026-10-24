@@ -100,7 +100,7 @@ Every subject has its foundation units built. Each course lists its next units o
 
 ## Content so far
 
-103 lessons and about 560 exercise slots. Most maths and science exercises generate new numbers each time.
+109 lessons and about 600 exercise slots. Most maths and science exercises generate new numbers each time.
 
 | Course | Units |
 | --- | --- |
