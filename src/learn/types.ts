@@ -15,6 +15,8 @@ interface Base {
   /** Shown after answering, right or wrong. */
   explain: string;
   tip?: Tip;
+  /** Worked solution, one line per step, for the notebook. Defaults to the explanation. */
+  steps?: string[];
 }
 
 export interface ChoiceEx extends Base {

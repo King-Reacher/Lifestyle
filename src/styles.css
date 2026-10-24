@@ -1689,3 +1689,154 @@ input[type='checkbox'] {
 .revisit-card {
   border-left: 4px solid var(--gold);
 }
+
+/* Notebook */
+
+.player.deep {
+  z-index: 60;
+}
+
+.deep-body {
+  overflow-y: auto;
+  padding-bottom: 12px;
+}
+
+.notebook-q {
+  margin: 8px 0 10px;
+}
+
+.notebook-q .prompt {
+  font-size: 19px;
+  margin: 4px 0 0;
+}
+
+.step-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  font-weight: 700;
+  line-height: 1.45;
+  animation: pop-in 0.2s ease;
+}
+
+.step-card.ok {
+  border-color: color-mix(in srgb, var(--green) 60%, var(--border));
+}
+
+.step-card.helped {
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--border));
+}
+
+.step-card.current {
+  border-color: var(--blue);
+  background: var(--surface-2);
+}
+
+.step-n {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 900;
+  background: var(--surface-3);
+  color: var(--muted);
+}
+
+.step-ask {
+  font-size: 15px;
+  word-break: break-word;
+}
+
+.step-input {
+  min-height: 42px;
+  padding: 8px 12px;
+  font-size: 17px;
+}
+
+.step-help {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.step-help .mono {
+  color: var(--text);
+}
+
+.final-answer {
+  margin: 12px 0 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--green) 16%, var(--bg));
+  font-weight: 800;
+}
+
+.btn.deeper {
+  margin: 10px 0 0;
+  background: var(--surface-2);
+  border-color: var(--blue);
+  color: var(--text);
+}
+
+.notebook-topics {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.notebook-topics .option,
+.rough + .option {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rough-input {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-variant-ligatures: none;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.rough-results {
+  margin-top: 6px;
+  display: grid;
+  gap: 4px;
+}
+
+.rough-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 14px;
+}
+
+.rough-line .mono {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rough-line b {
+  flex: none;
+  color: var(--blue);
+}
+
+.rough-line.ok b {
+  color: var(--green);
+}
+
+.rough-line.bad b {
+  color: var(--red);
+}

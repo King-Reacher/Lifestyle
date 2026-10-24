@@ -377,7 +377,7 @@ const hcfGen = (rng: Rng): Exercise => {
     m = int(rng, 2, 7);
     n = int(rng, 2, 7);
   }
-  return { kind: 'input', id: 'm1-hcf', prompt: `HCF of ${h * m} and ${h * n} = ?`, answers: [String(h)], explain: `${h * m} = ${h} × ${m} and ${h * n} = ${h} × ${n}. ${m} and ${n} share nothing, so the HCF is ${h}.` };
+  return { kind: 'input', id: 'm1-hcf', prompt: `HCF of ${h * m} and ${h * n} = ?`, answers: [String(h)], explain: `${h * m} = ${h} × ${m} and ${h * n} = ${h} × ${n}. ${m} and ${n} share nothing, so the HCF is ${h}.`, steps: [`Try ${h}: ${h * m} ÷ ${h} = ${m}.`, `And ${h * n} ÷ ${h} = ${n}.`, `${m} and ${n} have no common factor except 1, so nothing bigger than ${h} divides both.`, `HCF = ${h}.`] };
 };
 
 const lcmGen = (rng: Rng): Exercise => {
@@ -385,7 +385,7 @@ const lcmGen = (rng: Rng): Exercise => {
   let b = int(rng, 2, 12);
   while (b === a) b = int(rng, 2, 12);
   const l = lcm(a, b);
-  return { kind: 'input', id: 'm1-lcm', prompt: `LCM of ${a} and ${b} = ?`, answers: [String(l)], explain: `Count up in ${Math.max(a, b)}s until you hit a multiple of ${Math.min(a, b)}: ${l}.`, tip: { kind: 'shortcut', text: 'List multiples of the BIGGER number and stop at the first one the smaller number divides.' } };
+  return { kind: 'input', id: 'm1-lcm', prompt: `LCM of ${a} and ${b} = ?`, answers: [String(l)], explain: `Count up in ${Math.max(a, b)}s until you hit a multiple of ${Math.min(a, b)}: ${l}.`, steps: [`Multiples of ${Math.max(a, b)}: ${Array.from({ length: l / Math.max(a, b) }, (_, i) => (i + 1) * Math.max(a, b)).join(', ')}.`, `Check the last one: ${l} ÷ ${Math.min(a, b)} = ${l / Math.min(a, b)}, a whole number.`, `LCM = ${l}.`], tip: { kind: 'shortcut', text: 'List multiples of the BIGGER number and stop at the first one the smaller number divides.' } };
 };
 
 const hcfLcm: Lesson = {

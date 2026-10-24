@@ -7,6 +7,7 @@ import { courseById } from '../courses';
 import { addMistakes, correctAnswer } from '../engine';
 import { buildExam, FORMATS, scoreExam, type ExamFormat, type ExamQuestion, type ExamRecord } from '../exam';
 import { ExerciseView, Prompt } from './Exercises';
+import { DeepDive } from './Notebook';
 import { TipBox } from './Player';
 
 const OPTIONAL = ['maths', 'physics', 'chemistry', 'biology'];
@@ -282,6 +283,8 @@ function ExamResults({ record, questions, results, onClose }: { record: ExamReco
         ? `${record.total}/${record.max}. Solid base. Your review queue now holds every miss, clear it before the next mock.`
         : `${record.total}/${record.max}. This is where the work starts, my child. Every wrong answer is now in your review. We go again.`;
   const wrong = questions.map((q, i) => ({ q, i })).filter(({ i }) => !results[i]);
+  const [deep, setDeep] = useState<ExamQuestion | null>(null);
+  if (deep) return <DeepDive ex={deep.ex} onClose={() => setDeep(null)} />;
   const expected = record.subjects.reduce((n, s) => n + FORMATS[record.format].perSubject(s.subject === 'english'), 0);
   const short = questions.length < expected;
 
@@ -330,6 +333,9 @@ function ExamResults({ record, questions, results, onClose }: { record: ExamReco
                 {q.ex.explain}
               </div>
               {q.ex.tip && <TipBox tip={q.ex.tip} />}
+              <button className="btn sm deeper" style={{ marginTop: 8 }} onClick={() => (haptic(), setDeep(q))}>
+                📓 Go deeper
+              </button>
             </div>
           ))}
         </>

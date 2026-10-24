@@ -232,11 +232,14 @@ const organicGen = (rng: Rng): Exercise => {
   const n = int(rng, fam.min, 8);
   const name = PREFIX[n - 1] + fam.end;
   const right = formula(n, fam.h(n));
+  const hWork = (f: (typeof FAMILIES)[number]) => `${f.name === 'alkane' ? `2 × ${n} + 2` : f.name === 'alkene' ? `2 × ${n}` : `2 × ${n} − 2`} = ${f.h(n)}`;
+  const formulaSteps = [`"${PREFIX[n - 1]}" means ${n} carbon${n > 1 ? 's' : ''}.`, `An ${fam.name} follows ${fam.rule}.`, `Hydrogens: ${hWork(fam)}.`, `Formula: ${right}.`];
+  const nameSteps = [`Count the carbons: ${n}, so the name starts "${PREFIX[n - 1]}".`, ...FAMILIES.filter((f) => n >= f.min).map((f) => `${f.name[0].toUpperCase()}${f.name.slice(1)} hydrogens: ${hWork(f)}.`), `${fam.h(n)} hydrogens matches the ${fam.name}, so the name is ${name}.`];
   const tip = { kind: 'formula' as const, text: `${fam.name}s: ${fam.rule}. Prefix gives the carbons: meth 1, eth 2, prop 3, but 4, pent 5, hex 6.` };
   if (rng() < 0.5)
-    return choice(rng, { id: 'c5-formula', prompt: `What is the formula of ${name}?`, explain: `"${PREFIX[n - 1]}" means ${n} carbon${n > 1 ? 's' : ''}; it is an ${fam.name}, ${fam.rule}: ${right}.`, tip }, right, FAMILIES.filter((f) => f !== fam && n >= f.min).map((f) => formula(n, f.h(n))).concat([formula(n + 1, fam.h(n + 1)), formula(n, fam.h(n) + 1)]));
+    return choice(rng, { id: 'c5-formula', steps: formulaSteps, prompt: `What is the formula of ${name}?`, explain: `"${PREFIX[n - 1]}" means ${n} carbon${n > 1 ? 's' : ''}; it is an ${fam.name}, ${fam.rule}: ${right}.`, tip }, right, FAMILIES.filter((f) => f !== fam && n >= f.min).map((f) => formula(n, f.h(n))).concat([formula(n + 1, fam.h(n + 1)), formula(n, fam.h(n) + 1)]));
   const others = FAMILIES.filter((f) => f !== fam && n >= f.min).map((f) => PREFIX[n - 1] + f.end);
-  return choice(rng, { id: 'c5-name', prompt: `Name the hydrocarbon ${right}`, explain: `${n} carbon${n > 1 ? 's' : ''} → "${PREFIX[n - 1]}". H = ${fam.h(n)} fits ${fam.rule}, so it is an ${fam.name}: ${name}.`, tip }, name, others.concat([PREFIX[n % 8] + fam.end, PREFIX[(n + 6) % 8] + fam.end]));
+  return choice(rng, { id: 'c5-name', steps: nameSteps, prompt: `Name the hydrocarbon ${right}`, explain: `${n} carbon${n > 1 ? 's' : ''} → "${PREFIX[n - 1]}". H = ${fam.h(n)} fits ${fam.rule}, so it is an ${fam.name}: ${name}.`, tip }, name, others.concat([PREFIX[n % 8] + fam.end, PREFIX[(n + 6) % 8] + fam.end]));
 };
 
 export const CHEMISTRY_NEXT: Unit[] = [

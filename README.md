@@ -98,6 +98,22 @@ Every subject has its foundation units built. Each course lists its next units o
   - Five inventions ticks the career milestone automatically.
 - **Editor:** Enter after `{` closes the block for you, with the cursor indented inside it.
 
+## Notebook: solve it step by step
+
+- **📓 Go deeper** appears after every question in lessons, reviews and mock exams.
+  - **Watch me solve it:** the worked solution, one step at a time, ending with the answer and the tip.
+  - **Your turn:** the same kind of question with new numbers. Each step has a blank for the number you work out, and each blank is checked on its own. A wrong step shows how that step was done in the example; after two misses it shows the answer and moves on.
+  - At the end you see how many steps you got right first time, can do another one, and can save the page.
+- **📓 Notebook tab** in Learn:
+  - **Practise step by step** for every lesson you have reached, newest first.
+  - **Scratch pad:** each line is worked out (`12 × 15` shows 180) or checked (`625 − 576 = 59` is marked wrong, with the right value). It understands × ÷ − ² √ π, fractions and brackets.
+  - **Saved pages:** the worked example next to your own attempt, with the steps you needed help on marked 💡.
+- Steps come from each question's worked explanation. Some question types have hand-written steps: inequalities, differentiation, integration, median, mode, probability, HCF and LCM, radioactive decay and hydrocarbon formulas.
+- **Tests:**
+  - Every blank accepts its own answer, with or without the unit, and rejects a wrong one.
+  - Every "a = b" in every worked solution, across 40 versions of every lesson, is checked as real arithmetic. This found a magnification answer rounded to 0.3333, which now accepts 1/3.
+  - Every generated question type can make a new-numbers version for "your turn".
+
 ## Content so far
 
 138 lessons and about 770 exercise slots. Most maths and science exercises generate new numbers each time.

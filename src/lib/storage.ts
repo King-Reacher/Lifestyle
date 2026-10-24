@@ -44,6 +44,10 @@ export function parseData(text: string | null | undefined): AppData | null {
       review: Array.isArray(l.review) ? l.review.filter((r: { ex?: unknown; due?: unknown }) => r && r.ex && typeof r.due === 'string') : [],
       exams: Array.isArray(l.exams) ? l.exams : [],
       flagged: Array.isArray(l.flagged) ? l.flagged.filter((f: { card?: { id?: unknown } }) => f && f.card && typeof f.card.id === 'string') : [],
+      notebook: {
+        pages: Array.isArray(l.notebook?.pages) ? l.notebook.pages.filter((p: { id?: unknown; example?: unknown }) => p && typeof p.id === 'string' && p.example) : [],
+        scratch: typeof l.notebook?.scratch === 'string' ? l.notebook.scratch : '',
+      },
     };
     const m = raw.money ?? {};
     const base = emptyMoney();

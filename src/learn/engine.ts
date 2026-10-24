@@ -157,9 +157,33 @@ export interface LearnState {
   review: ReviewItem[];
   exams: ExamRecord[];
   flagged: Flagged[];
+  notebook: Notebook;
 }
 
-export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [], exams: [], flagged: [] });
+/** One line of your own working, as you typed it. */
+export interface NoteLine {
+  ask: string;
+  typed: string;
+  ok: boolean;
+}
+
+/** A saved notebook page: a worked example and your own attempt at the same kind of question. */
+export interface NotePage {
+  id: string;
+  at: string;
+  title: string;
+  example: { prompt: string; lines: string[]; answer: string };
+  mine?: { prompt: string; lines: NoteLine[]; answer: string; firstTry: number; total: number };
+  rough?: string;
+}
+
+export interface Notebook {
+  pages: NotePage[];
+  /** The free scratch pad. */
+  scratch: string;
+}
+
+export const emptyLearn = (): LearnState => ({ lessons: {}, xpByDay: {}, review: [], exams: [], flagged: [], notebook: { pages: [], scratch: '' } });
 
 export function flagCard(state: LearnState, card: Teach, note?: string, at = new Date().toISOString()): LearnState {
   return { ...state, flagged: [...state.flagged.filter((f) => f.card.id !== card.id), { card, at, note }] };

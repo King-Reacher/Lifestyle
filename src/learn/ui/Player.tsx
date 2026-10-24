@@ -24,6 +24,7 @@ import { today } from '../../lib/dates';
 import type { Area } from '../../lib/ledger';
 import { uid, useStore } from '../../lib/store';
 import { ExerciseView, Prompt, PROMPT_LABEL } from './Exercises';
+import { DeepDive } from './Notebook';
 import { UnderstandHelp } from './Understand';
 
 const PRAISE: { who: Who; text: string }[] = [
@@ -100,6 +101,7 @@ export function Player({
 }) {
   const { update } = useStore();
   const [help, setHelp] = useState(false);
+  const [deep, setDeep] = useState<Exercise | null>(null);
   const [session, setSession] = useState(() => startSession(items));
   const [phase, setPhase] = useState<'answering' | 'feedback'>('answering');
   const [ready, setReady] = useState(false);
@@ -204,6 +206,8 @@ export function Player({
   const lostHeart = phase === 'feedback' && !correct && !!ex;
   const hearts = session.hearts - (lostHeart ? 1 : 0);
 
+  if (deep) return <DeepDive ex={deep} host={host} onClose={() => setDeep(null)} />;
+
   return (
     <div className="player">
       <div className="player-top">
@@ -284,6 +288,11 @@ export function Player({
             </>
           )}
           {ex.tip && <TipBox tip={ex.tip} />}
+          {ex.kind !== 'code' && (
+            <button className="btn block deeper" onClick={() => (haptic(), setDeep(ex))}>
+              📓 Go deeper: solve it step by step
+            </button>
+          )}
           <button className={`btn block ${correct ? 'go' : 'danger-solid'}`} onClick={next}>
             {correct ? 'Continue' : 'Got it'}
           </button>

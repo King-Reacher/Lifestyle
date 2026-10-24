@@ -1,5 +1,5 @@
 import type { Exercise, Rng, Unit } from '../types';
-import { choice, dec, int, match, mc, order, pickOne, teach, tf } from '../util';
+import { choice, dec, frac, int, match, mc, order, pickOne, teach, tf } from '../util';
 
 /* Physics: light and optics */
 
@@ -25,8 +25,8 @@ const LENS: [number, number, number][] = [[30, 60, 20], [20, 20, 10], [12, 24, 8
 
 const lensGen = (rng: Rng): Exercise => {
   const [u, v, f] = pickOne(rng, LENS);
-  if (rng() < 0.6) return { kind: 'input', id: 'p6-focal', prompt: `An object ${u} cm from a converging lens forms a real image ${v} cm away. Focal length (cm)?`, answers: [String(f)], explain: `1/f = 1/u + 1/v = 1/${u} + 1/${v} = 1/${f}, so f = ${f} cm.`, tip: { kind: 'formula', text: '1/f = 1/u + 1/v (real is positive). Find a common denominator.' } };
-  return { kind: 'input', id: 'p6-magnification', prompt: `An object ${u} cm from a lens forms an image ${v} cm away. Magnification?`, answers: [dec(v / u)], explain: `m = v ÷ u = ${v} ÷ ${u} = ${dec(v / u)}.${v > u ? ' The image is bigger than the object.' : v < u ? ' The image is smaller than the object.' : ' The image is the same size.'}`, tip: { kind: 'formula', text: 'Magnification m = image distance ÷ object distance = image height ÷ object height.' } };
+  if (rng() < 0.6) return { kind: 'input', id: 'p6-focal', prompt: `An object ${u} cm from a converging lens forms a real image ${v} cm away. Focal length (cm)?`, answers: [String(f)], explain: `1/f = 1/u + 1/v = 1/${u} + 1/${v} = 1/${f}. Flip both sides: f = ${f} cm.`, tip: { kind: 'formula', text: '1/f = 1/u + 1/v (real is positive). Find a common denominator.' } };
+  return { kind: 'input', id: 'p6-magnification', prompt: `An object ${u} cm from a lens forms an image ${v} cm away. Magnification?`, answers: [frac(v, u), dec(v / u, 2)], explain: `m = v ÷ u = ${v} ÷ ${u} = ${frac(v, u)}.${v > u ? ' The image is bigger than the object.' : v < u ? ' The image is smaller than the object.' : ' The image is the same size.'}`, tip: { kind: 'formula', text: 'Magnification m = image distance ÷ object distance = image height ÷ object height.' } };
 };
 
 /* Physics: magnetism and induction */
@@ -60,7 +60,8 @@ const decayGen = (rng: Rng): Exercise => {
   const alpha = rng() < 0.6;
   const [na, nz] = alpha ? [a - 4, z - 2] : [a, z + 1];
   const show = (m: number, p: number) => `mass ${m}, atomic number ${p}`;
-  return choice(rng, { id: 'p8-decay', prompt: `${sym} has mass number ${a} and atomic number ${z}. It emits ${alpha ? 'an alpha' : 'a beta'} particle. The new nucleus has…`, explain: alpha ? `An alpha particle is ⁴₂He: mass falls by 4 (${a} → ${na}), atomic number falls by 2 (${z} → ${nz}).` : `In beta decay a neutron becomes a proton and an electron is thrown out: mass stays ${a}, atomic number rises by 1 (${z} → ${nz}).`, tip: { kind: 'memory', text: 'Alpha: mass −4, number −2. Beta: mass same, number +1. Gamma: no change.' } }, show(na, nz), [show(a - 4, z - 2), show(a, z + 1), show(a, z - 1), show(a - 2, z - 4), show(a - 4, z + 2)]);
+  const steps = alpha ? [`An alpha particle carries away 4 mass units and 2 protons.`, `Mass number: ${a} − 4 = ${na}.`, `Atomic number: ${z} − 2 = ${nz}.`] : [`In beta decay a neutron turns into a proton, so the mass stays the same.`, `Mass number stays ${a}.`, `Atomic number: ${z} + 1 = ${nz}.`];
+  return choice(rng, { id: 'p8-decay', steps, prompt: `${sym} has mass number ${a} and atomic number ${z}. It emits ${alpha ? 'an alpha' : 'a beta'} particle. The new nucleus has…`, explain: alpha ? `An alpha particle is ⁴₂He: mass falls by 4 (${a} → ${na}), atomic number falls by 2 (${z} → ${nz}).` : `In beta decay a neutron becomes a proton and an electron is thrown out: mass stays ${a}, atomic number rises by 1 (${z} → ${nz}).`, tip: { kind: 'memory', text: 'Alpha: mass −4, number −2. Beta: mass same, number +1. Gamma: no change.' } }, show(na, nz), [show(a - 4, z - 2), show(a, z + 1), show(a, z - 1), show(a - 2, z - 4), show(a - 4, z + 2)]);
 };
 
 export const PHYSICS_ADV: Unit[] = [

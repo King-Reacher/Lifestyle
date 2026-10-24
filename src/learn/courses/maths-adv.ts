@@ -1,5 +1,5 @@
 import type { Exercise, Rng, Unit } from '../types';
-import { choice, frac, int, match, mc, num, pickOne, shuffle, simplify, teach, tf } from '../util';
+import { br, choice, frac, int, match, mc, num, pickOne, shuffle, simplify, teach, tf } from '../util';
 import { sup } from './maths-more';
 
 const nonZero = (rng: Rng, lo: number, hi: number) => {
@@ -37,7 +37,13 @@ const inequalityGen = (rng: Rng): Exercise => {
   const right = `x ${out} ${num(x0)}`;
   const step1 = b === 0 ? '' : `${b < 0 ? 'Add' : 'Subtract'} ${Math.abs(b)}: ${a === 1 ? '' : a === -1 ? '−' : num(a)}x ${op} ${num(c - b)}. `;
   const step2 = a === 1 ? '' : a < 0 ? `Divide by ${num(a)}, a negative number, so the sign flips: ${right}.` : `Divide by ${a}: ${right}.`;
-  return choice(rng, { id: 'm8-inequality', prompt: `Solve ${lhs} ${op} ${num(c)}`, explain: (step1 + step2).trim(), tip: { kind: 'eliminate', text: 'Multiplying or dividing by a negative flips the sign. If you divided by a negative, the arrow must turn round.' } }, right, [`x ${FLIP[out]} ${num(x0)}`, `x ${out} ${num(-x0)}`, `x ${FLIP[out]} ${num(-x0)}`, `x ${out} ${num(x0 + 1)}`]);
+  const coef = a === 1 ? '' : a === -1 ? '−' : num(a);
+  const steps = [
+    ...(b === 0 ? [] : [`${b < 0 ? 'Add' : 'Subtract'} ${Math.abs(b)} on both sides: ${num(c)} ${b < 0 ? '+' : '−'} ${Math.abs(b)} = ${num(c - b)}.`, `Now ${coef}x ${op} ${num(c - b)}.`]),
+    ...(a === 1 ? [] : [`Divide both sides by ${num(a)}: ${num(c - b)} ÷ ${br(a)} = ${num(x0)}.`, a < 0 ? `You divided by a negative, so ${op} flips to ${out}.` : `You divided by a positive, so ${op} stays ${op}.`]),
+    `Answer: ${right}.`,
+  ];
+  return choice(rng, { id: 'm8-inequality', prompt: `Solve ${lhs} ${op} ${num(c)}`, explain: (step1 + step2).trim(), steps, tip: { kind: 'eliminate', text: 'Multiplying or dividing by a negative flips the sign. If you divided by a negative, the arrow must turn round.' } }, right, [`x ${FLIP[out]} ${num(x0)}`, `x ${out} ${num(-x0)}`, `x ${FLIP[out]} ${num(-x0)}`, `x ${out} ${num(x0 + 1)}`]);
 };
 
 const inequalities = {
@@ -134,8 +140,8 @@ const pythagorasGen = (rng: Rng): Exercise => {
   const [p, q, r] = pickOne(rng, TRIPLES);
   const k = p === 3 ? int(rng, 1, 4) : 1;
   const [a, b, c] = [p * k, q * k, r * k];
-  if (rng() < 0.5) return { kind: 'input', id: 'm9-hyp', prompt: `A right-angled triangle has shorter sides ${a} cm and ${b} cm. Hypotenuse (cm)?`, answers: [String(c)], explain: `c² = ${a}² + ${b}² = ${a * a} + ${b * b} = ${c * c}, so c = ${c} cm.`, tip: { kind: 'shortcut', text: 'Learn the triples 3-4-5, 5-12-13, 8-15-17, 7-24-25 and their multiples. JAMB uses them all the time.' } };
-  return { kind: 'input', id: 'm9-leg', prompt: `A right-angled triangle has hypotenuse ${c} cm and one side ${b} cm. The other side (cm)?`, answers: [String(a)], explain: `a² = ${c}² − ${b}² = ${c * c} − ${b * b} = ${a * a}, so a = ${a} cm.`, tip: { kind: 'formula', text: 'For a shorter side, subtract: a² = c² − b².' } };
+  if (rng() < 0.5) return { kind: 'input', id: 'm9-hyp', prompt: `A right-angled triangle has shorter sides ${a} cm and ${b} cm. Hypotenuse (cm)?`, answers: [String(c)], explain: `c² = ${a}² + ${b}² = ${a * a} + ${b * b} = ${c * c}, so c = √${c * c} = ${c} cm.`, tip: { kind: 'shortcut', text: 'Learn the triples 3-4-5, 5-12-13, 8-15-17, 7-24-25 and their multiples. JAMB uses them all the time.' } };
+  return { kind: 'input', id: 'm9-leg', prompt: `A right-angled triangle has hypotenuse ${c} cm and one side ${b} cm. The other side (cm)?`, answers: [String(a)], explain: `a² = ${c}² − ${b}² = ${c * c} − ${b * b} = ${a * a}, so a = √${a * a} = ${a} cm.`, tip: { kind: 'formula', text: 'For a shorter side, subtract: a² = c² − b².' } };
 };
 
 const mensurationGen = (rng: Rng): Exercise => {
@@ -272,7 +278,7 @@ const statsGen = (rng: Rng): Exercise => {
     const xs = Array.from({ length: n }, () => int(rng, 1, 30));
     const sorted = [...xs].sort((a, b) => a - b);
     const median = sorted[(n - 1) / 2];
-    return { kind: 'input', id: 'm11-median', prompt: `Find the median of ${xs.join(', ')}`, answers: [String(median)], explain: `Sort first: ${sorted.join(', ')}. The middle value is ${median}.`, tip: { kind: 'eliminate', text: 'Never take the middle before sorting. That is the trap.' } };
+    return { kind: 'input', id: 'm11-median', prompt: `Find the median of ${xs.join(', ')}`, answers: [String(median)], explain: `Sort first: ${sorted.join(', ')}. The middle value is ${median}.`, steps: [`Sort the numbers: ${sorted.join(', ')}.`, `There are ${n} numbers, so the middle position = (${n} + 1) ÷ 2 = ${(n + 1) / 2}.`, `Number ${(n + 1) / 2} in the sorted list: median = ${median}.`], tip: { kind: 'eliminate', text: 'Never take the middle before sorting. That is the trap.' } };
   }
   if (kind === 2) {
     const mode = int(rng, 1, 12);
@@ -286,7 +292,7 @@ const statsGen = (rng: Rng): Exercise => {
       const j = Math.floor(rng() * (i + 1));
       [xs[i], xs[j]] = [xs[j], xs[i]];
     }
-    return { kind: 'input', id: 'm11-mode', prompt: `Find the mode of ${xs.join(', ')}`, answers: [String(mode)], explain: `${mode} appears 3 times, more than any other value.`, tip: { kind: 'memory', text: 'MOde = MOst often.' } };
+    return { kind: 'input', id: 'm11-mode', prompt: `Find the mode of ${xs.join(', ')}`, answers: [String(mode)], explain: `${mode} appears 3 times, more than any other value.`, steps: ['Count how often each value appears.', `${mode} appears 3 times; every other value appears once.`, `Mode = ${mode}.`], tip: { kind: 'memory', text: 'MOde = MOst often.' } };
   }
   const xs = Array.from({ length: 6 }, () => int(rng, 1, 40));
   const range = Math.max(...xs) - Math.min(...xs);
@@ -301,7 +307,8 @@ const probabilityGen = (rng: Rng): Exercise => {
     const not = rng() < 0.3;
     const want = not ? total - pick[1] : pick[1];
     const [n, d] = simplify(want, total);
-    return { kind: 'input', id: 'm11-bag', prompt: `A bag has ${r} red, ${b} blue and ${g} green balls. One is picked at random. Probability it is ${not ? 'NOT ' : ''}${pick[0]}?`, rational: [n, d], explain: `${not ? `Not ${pick[0]}: ${total} − ${pick[1]} = ${want}` : `${pick[0][0].toUpperCase()}${pick[0].slice(1)} balls: ${want}`} out of ${total}, so ${want}/${total}${d === total ? '' : ` = ${frac(n, d)}`}.`, tip: { kind: 'formula', text: 'P = favourable outcomes ÷ total outcomes. P(not A) = 1 − P(A).' } };
+    const steps = [`Total balls = ${r} + ${b} + ${g} = ${total}.`, not ? `Balls that are not ${pick[0]} = ${total} − ${pick[1]} = ${want}.` : `${pick[0][0].toUpperCase()}${pick[0].slice(1)} balls = ${want}.`, `Probability = ${want} ÷ ${total} = ${frac(n, d)}.`];
+    return { kind: 'input', id: 'm11-bag', steps, prompt: `A bag has ${r} red, ${b} blue and ${g} green balls. One is picked at random. Probability it is ${not ? 'NOT ' : ''}${pick[0]}?`, rational: [n, d], explain: `${not ? `Not ${pick[0]}: ${total} − ${pick[1]} = ${want}` : `${pick[0][0].toUpperCase()}${pick[0].slice(1)} balls: ${want}`} out of ${total}, so ${want}/${total}${d === total ? '' : ` = ${frac(n, d)}`}.`, tip: { kind: 'formula', text: 'P = favourable outcomes ÷ total outcomes. P(not A) = 1 − P(A).' } };
   }
   const k = int(rng, 1, 5);
   const [n, d] = simplify(6 - k, 6);
@@ -358,7 +365,16 @@ const diffGen = (rng: Rng): Exercise => {
   const c = int(rng, -9, 9);
   const y = poly([[a, n], [b, m], [c, 0]]);
   const right = poly([[a * n, n - 1], [b * m, m - 1]]);
-  return choice(rng, { id: 'm12-diff', prompt: `Differentiate y = ${y}`, explain: `Bring each power down and reduce it by one: ${poly([[a, n]])} → ${poly([[a * n, n - 1]])}, ${poly([[b, m]])} → ${poly([[b * m, m - 1]])}${c ? `, and the constant ${num(c)} → 0` : ''}. dy/dx = ${right}.`, tip: { kind: 'formula', text: 'd/dx (axⁿ) = naxⁿ⁻¹. Constants disappear.' } }, right, [poly([[a * n, n], [b * m, m]]), poly([[a, n - 1], [b, m - 1]]), ...(m > 1 && c ? [poly([[a * n, n - 1], [b * m, m - 1], [c, 0]])] : []), poly([[a * n, n + 1], [b * m, m + 1]]), poly([[a * (n - 1), n - 1], [b * Math.max(m - 1, 1), m - 1]])]);
+  const steps = [
+    ...([[a, n], [b, m]] as [number, number][]).flatMap(([co, p]) => [
+      `${poly([[co, p]])}: multiply by the power, ${p} × ${br(co)} = ${co * p}.`,
+      `Lower the power: ${p} − 1 = ${p - 1}.`,
+      `So ${poly([[co, p]])} becomes ${poly([[co * p, p - 1]])}.`,
+    ]),
+    ...(c ? [`The constant ${num(c)} becomes 0.`] : []),
+    `Put it together: dy/dx = ${right}.`,
+  ];
+  return choice(rng, { id: 'm12-diff', steps, prompt: `Differentiate y = ${y}`, explain: `Bring each power down and reduce it by one: ${poly([[a, n]])} → ${poly([[a * n, n - 1]])}, ${poly([[b, m]])} → ${poly([[b * m, m - 1]])}${c ? `, and the constant ${num(c)} → 0` : ''}. dy/dx = ${right}.`, tip: { kind: 'formula', text: 'd/dx (axⁿ) = naxⁿ⁻¹. Constants disappear.' } }, right, [poly([[a * n, n], [b * m, m]]), poly([[a, n - 1], [b, m - 1]]), ...(m > 1 && c ? [poly([[a * n, n - 1], [b * m, m - 1], [c, 0]])] : []), poly([[a * n, n + 1], [b * m, m + 1]]), poly([[a * (n - 1), n - 1], [b * Math.max(m - 1, 1), m - 1]])]);
 };
 
 const gradientGen = (rng: Rng): Exercise => {
@@ -380,7 +396,8 @@ const integrateGen = (rng: Rng): Exercise => {
   const k = nonZero(rng, -4, 5);
   const a = k * (n + 1);
   const right = `${poly([[k, n + 1]])} + C`;
-  return choice(rng, { id: 'm12-integrate', prompt: `Integrate ${poly([[a, n]])} with respect to x`, explain: `Raise the power by one and divide by the new power: ${poly([[a, n]])} → ${num(a)}x${sup(n + 1)} ÷ ${n + 1} = ${poly([[k, n + 1]])}. Add the constant C.`, tip: { kind: 'formula', text: '∫xⁿ dx = xⁿ⁺¹/(n + 1) + C. Differentiate your answer to check it.' } }, right, [`${poly([[a * n, n - 1]])} + C`, `${poly([[a, n + 1]])} + C`, poly([[k, n + 1]]), `${poly([[k, n]])} + C`]);
+  const steps = [`Raise the power by one: ${n} + 1 = ${n + 1}.`, `Divide the number in front by the new power: ${num(a)} ÷ ${n + 1} = ${num(k)}.`, `So ${poly([[a, n]])} integrates to ${poly([[k, n + 1]])}.`, `Add the constant: ${right}.`];
+  return choice(rng, { id: 'm12-integrate', steps, prompt: `Integrate ${poly([[a, n]])} with respect to x`, explain: `Raise the power by one and divide by the new power: ${poly([[a, n]])} → ${num(a)}x${sup(n + 1)} ÷ ${n + 1} = ${poly([[k, n + 1]])}. Add the constant C.`, tip: { kind: 'formula', text: '∫xⁿ dx = xⁿ⁺¹/(n + 1) + C. Differentiate your answer to check it.' } }, right, [`${poly([[a * n, n - 1]])} + C`, `${poly([[a, n + 1]])} + C`, poly([[k, n + 1]]), `${poly([[k, n]])} + C`]);
 };
 
 const differentiation = {

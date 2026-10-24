@@ -149,7 +149,7 @@ const suvatGen = (rng: Rng): Exercise => {
   const u = int(rng, 0, 8);
   const v = u + 2 * int(rng, 1, 5);
   const s = (v * v - u * u) / (2 * a);
-  return { kind: 'input', id: 'p1-suvat-v2', prompt: `u = ${u} m/s, a = ${a} m/s², s = ${s} m. Final velocity v (m/s)?`, answers: [String(v)], explain: `v² = u² + 2as = ${u * u} + 2×${a}×${s} = ${v * v}, so v = ${v} m/s.`, tip: { kind: 'formula', text: 'v² = u² + 2as' } };
+  return { kind: 'input', id: 'p1-suvat-v2', prompt: `u = ${u} m/s, a = ${a} m/s², s = ${s} m. Final velocity v (m/s)?`, answers: [String(v)], explain: `v² = u² + 2as = ${u * u} + 2×${a}×${s} = ${v * v}, so v = √${v * v} = ${v} m/s.`, tip: { kind: 'formula', text: 'v² = u² + 2as' } };
 };
 
 const equations: Lesson = {

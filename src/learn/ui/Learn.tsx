@@ -9,10 +9,12 @@ import type { Course, Lesson } from '../types';
 import { CodeLab } from '../../code/CodeLab';
 import { CareerPath } from './CareerPath';
 import { ExamHall } from './ExamHall';
+import { NotebookHome } from './Notebook';
 import { Player, TeachView, type PlayerResult } from './Player';
 
 const REVIEW_XP = 5;
 const EXAM_TAB = 'exam';
+const NOTEBOOK_TAB = 'notebook';
 
 type Playing = { kind: 'lesson'; course: Course; lesson: Lesson; items: Item[]; host: Who } | { kind: 'review'; items: Item[] };
 
@@ -96,6 +98,9 @@ export function Learn() {
         <button className={`chip ${tab === EXAM_TAB ? 'selected' : ''}`} onClick={() => (haptic(), setTab(EXAM_TAB))}>
           🏆 Exam hall
         </button>
+        <button className={`chip ${tab === NOTEBOOK_TAB ? 'selected' : ''}`} onClick={() => (haptic(), setTab(NOTEBOOK_TAB))}>
+          📓 Notebook
+        </button>
       </div>
 
       <div className="learn-stats">
@@ -109,7 +114,7 @@ export function Learn() {
         <div style={{ width: `${Math.min(1, xpToday / DAILY_GOAL) * 100}%` }} />
       </div>
 
-      {due.length > 0 && tab !== EXAM_TAB && (
+      {due.length > 0 && tab !== EXAM_TAB && tab !== NOTEBOOK_TAB && (
         <div className="card glow">
           <Say who="greta" text={`${due.length} question${due.length > 1 ? 's' : ''} you missed before ${due.length > 1 ? 'are' : 'is'} due. Reviewing at the right time is how memory sticks.`} size={64}>
             <button className="btn primary sm" onClick={() => setPlaying({ kind: 'review', items: due.slice(0, 10).map((r) => r.ex) })}>
@@ -141,7 +146,7 @@ export function Learn() {
         </div>
       )}
 
-      {tab === EXAM_TAB ? <ExamHall /> : info && <CoursePath course={info.course} onStart={start} />}
+      {tab === EXAM_TAB ? <ExamHall /> : tab === NOTEBOOK_TAB ? <NotebookHome /> : info && <CoursePath course={info.course} onStart={start} />}
     </>
   );
 }
