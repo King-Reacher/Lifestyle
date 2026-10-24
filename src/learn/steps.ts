@@ -26,7 +26,8 @@ function valueOf(segment: string): { answer: string; unit?: string; prefix?: str
 
 function stepOf(clause: string): Step {
   const trimmed = clause.trim();
-  const text = trimmed[0].toUpperCase() + trimmed.slice(1);
+  // Capitalise words like "so", but never a variable such as y or f.
+  const text = /^[a-z]{2,}/.test(trimmed) ? trimmed[0].toUpperCase() + trimmed.slice(1) : trimmed;
   const core = text.replace(CONNECTOR, '').replace(/[.!]+$/, '');
   const blank = (head: string, sep: string, v: NonNullable<ReturnType<typeof valueOf>>): Step => ({
     text,

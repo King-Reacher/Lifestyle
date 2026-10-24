@@ -367,7 +367,7 @@ const diffGen = (rng: Rng): Exercise => {
   const right = poly([[a * n, n - 1], [b * m, m - 1]]);
   const steps = [
     ...([[a, n], [b, m]] as [number, number][]).flatMap(([co, p]) => [
-      `${poly([[co, p]])}: multiply by the power, ${p} × ${br(co)} = ${co * p}.`,
+      `${poly([[co, p]])}: multiply by the power, ${p} × ${br(co)} = ${num(co * p)}.`,
       `Lower the power: ${p} − 1 = ${p - 1}.`,
       `So ${poly([[co, p]])} becomes ${poly([[co * p, p - 1]])}.`,
     ]),

@@ -79,6 +79,13 @@ describe('worked steps', () => {
     expect(checked).toBeGreaterThan(1000);
   });
 
+  it('negative numbers use a real minus sign, not a hyphen', () => {
+    for (const ex of all) {
+      if (ex.kind === 'code') continue;
+      for (const text of [ex.prompt, ex.explain, ...(ex.steps ?? [])]) expect(text, ex.id).not.toMatch(/(^|[\s(:=×÷+])-\d/);
+    }
+  });
+
   it('almost every generated question type has working to copy', () => {
     const kinds = new Map<string, boolean>();
     for (const ex of all) if (ex.id.includes('#')) kinds.set(ex.id.split('#')[0], (kinds.get(ex.id.split('#')[0]) ?? false) || hasWorking(stepsFor(ex)));

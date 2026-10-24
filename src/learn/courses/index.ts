@@ -11,23 +11,26 @@ import { ENGLISH as ENGLISH_BASE } from './english';
 import { ENGLISH_MORE } from './english-more';
 import { ENGLISH_NEXT } from './english-next';
 import { ENGLISH_ADV } from './english-adv';
+import { ENGLISH_FINAL } from './english-final';
 import { MATHS as MATHS_BASE } from './maths';
 import { MATHS_MORE } from './maths-more';
 import { MATHS_NEXT } from './maths-next';
 import { MATHS_ADV } from './maths-adv';
+import { MATHS_FINAL } from './maths-final';
 import { PHYSICS as PHYSICS_BASE } from './physics';
 import { BIOLOGY_MORE, CHEMISTRY_MORE, PHYSICS_MORE } from './science-more';
 import { BIOLOGY_NEXT, CHEMISTRY_NEXT, PHYSICS_NEXT } from './science-next';
 import { BIOLOGY_ADV, CHEMISTRY_ADV, PHYSICS_ADV } from './science-adv';
+import { BIOLOGY_FINAL, CHEMISTRY_FINAL, PHYSICS_FINAL } from './science-final';
 
 /** Later units live in their own files; this puts each course back together. */
 const extend = (course: Course, more: Unit[], upcoming: string[]): Course => ({ ...course, units: [...course.units, ...more], upcoming });
 
-export const MATHS = extend(MATHS_BASE, [...MATHS_MORE, ...MATHS_NEXT, ...MATHS_ADV], ['Variation', 'Matrices & determinants', 'Coordinate geometry', 'Circle theorems', 'Bearings & distances']);
-export const PHYSICS = extend(PHYSICS_BASE, [...PHYSICS_MORE, ...PHYSICS_NEXT, ...PHYSICS_ADV], ['Projectiles & circular motion', 'Gravitation', 'Simple harmonic motion', 'Fluids & elasticity']);
-export const CHEMISTRY = extend(CHEMISTRY_BASE, [...CHEMISTRY_MORE, ...CHEMISTRY_NEXT, ...CHEMISTRY_ADV], ['Chemical bonding', 'Energy changes', 'Water & solubility', 'Non-metals: nitrogen, sulphur, halogens', 'Polymers & food chemistry']);
-export const ENGLISH = extend(ENGLISH_BASE, [...ENGLISH_MORE, ENGLISH_DRILLS, ...ENGLISH_NEXT, ...ENGLISH_ADV], ['Your JAMB novel', 'Punctuation & concord in depth', 'Vowel and consonant contrasts drill']);
-export const BIOLOGY = extend(BIOLOGY_BASE, [...BIOLOGY_MORE, BIOLOGY_DRILLS, ...BIOLOGY_NEXT, ...BIOLOGY_ADV], ['Skeleton & movement', 'Senses: the eye and ear', 'Diseases & immunity', 'Adaptation & conservation']);
+export const MATHS = extend(MATHS_BASE, [...MATHS_MORE, ...MATHS_NEXT, ...MATHS_ADV, ...MATHS_FINAL], ['Mixed revision drills']);
+export const PHYSICS = extend(PHYSICS_BASE, [...PHYSICS_MORE, ...PHYSICS_NEXT, ...PHYSICS_ADV, ...PHYSICS_FINAL], ['Mixed revision drills']);
+export const CHEMISTRY = extend(CHEMISTRY_BASE, [...CHEMISTRY_MORE, ...CHEMISTRY_NEXT, ...CHEMISTRY_ADV, ...CHEMISTRY_FINAL], ['Mixed revision drills']);
+export const ENGLISH = extend(ENGLISH_BASE, [...ENGLISH_MORE, ENGLISH_DRILLS, ...ENGLISH_NEXT, ...ENGLISH_ADV, ...ENGLISH_FINAL], ['Your JAMB novel (send me the title)', 'Mixed revision drills']);
+export const BIOLOGY = extend(BIOLOGY_BASE, [...BIOLOGY_MORE, BIOLOGY_DRILLS, ...BIOLOGY_NEXT, ...BIOLOGY_ADV, ...BIOLOGY_FINAL], ['Mixed revision drills']);
 export const CODING = extend(CODING_BASE, CODING_MORE, ['Strings in depth', 'Data structures: stacks, queues, maps', 'HTML & CSS', 'The DOM & events', 'Git & GitHub', 'React', 'APIs & async', 'Databases & SQL', 'Node.js backends', 'Security & testing']);
 export const ACADEMY = extend(ACADEMY_BASE, ACADEMY_MORE, ['Deeper lessons in every school']);
 

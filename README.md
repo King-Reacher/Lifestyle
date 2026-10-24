@@ -116,15 +116,15 @@ Every subject has its foundation units built. Each course lists its next units o
 
 ## Content so far
 
-138 lessons and about 770 exercise slots. Most maths and science exercises generate new numbers each time.
+159 lessons and about 880 exercise slots. Most maths and science exercises generate new numbers each time.
 
 | Course | Units |
 | --- | --- |
-| Mathematics | Number foundations; fractions, decimals and percentages; speed maths; bases, indices and standard form; algebra and changing the subject; logarithms, surds, sets and Venn diagrams; quadratic equations (factorising, sum and product of roots, the discriminant); inequalities, sequences and series; angles, Pythagoras, area and volume; trigonometry; statistics, probability, permutations and combinations; differentiation and integration |
-| English | Grammar foundations; words; idioms, prepositions and vocabulary; JAMB drills; Oral English (vowels, consonants, silent letters, stress, intonation); comprehension and summary; sentence interpretation and clauses; Literature (figures of speech, poetry, drama, prose); letters and essays |
-| Physics | Measurement and motion; matter and forces; energy; electricity (Ohm's law, series and parallel, power and cost); heat and waves; light and lenses; magnetism, induction and transformers; radioactivity |
-| Chemistry | Matter and atoms; formulas and the mole; reactions (balancing, acids, bases and salts); gas laws and electrolysis; organic chemistry; rates and equilibrium; metals, reactivity and industrial processes |
-| Biology | Life and the cell; feeding and ecology; body systems; JAMB drills; genetics, blood groups and reproduction; transport in plants, nerves and hormones, evolution, ecology |
+| Mathematics | Number foundations; fractions, decimals and percentages; speed maths; bases, indices and standard form; algebra and changing the subject; logarithms, surds, sets and Venn diagrams; quadratic equations (factorising, sum and product of roots, the discriminant); inequalities, sequences and series; angles, Pythagoras, area and volume; trigonometry; statistics, probability, permutations and combinations; differentiation and integration; variation and matrices; coordinate geometry, circle theorems and bearings |
+| English | Grammar foundations; words; idioms, prepositions and vocabulary; JAMB drills; Oral English (vowels, consonants, silent letters, stress, intonation); comprehension and summary; sentence interpretation and clauses; Literature (figures of speech, poetry, drama, prose); letters and essays; punctuation, concord and vowel contrasts |
+| Physics | Measurement and motion; matter and forces; energy; electricity (Ohm's law, series and parallel, power and cost); heat and waves; light and lenses; magnetism, induction and transformers; radioactivity; projectiles, circular motion and gravitation; oscillations, springs and fluids |
+| Chemistry | Matter and atoms; formulas and the mole; reactions (balancing, acids, bases and salts); gas laws and electrolysis; organic chemistry; rates and equilibrium; metals, reactivity and industrial processes; bonding and energy changes; water, non-metals and polymers |
+| Biology | Life and the cell; feeding and ecology; body systems; JAMB drills; genetics, blood groups and reproduction; transport in plants, nerves and hormones, evolution, ecology; skeleton, eye and ear, disease and immunity, adaptation and conservation |
 | Coding | How computers work; JavaScript first steps; decisions and loops; functions, arrays and objects; problem solving; array methods, recursion and sorting |
 | Academy | Schools 1 to 12 |
 

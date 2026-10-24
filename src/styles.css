@@ -1046,6 +1046,12 @@ code {
 .player-body .prompt {
   font-size: 22px;
   margin: 6px 0 18px;
+  white-space: pre-line;
+}
+
+.prompt:has(+ *) .mono,
+.notebook-q .prompt {
+  white-space: pre-line;
 }
 
 .passage {
